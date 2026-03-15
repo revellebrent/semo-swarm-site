@@ -1,4 +1,5 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { getSupabaseBrowserEnv } from "@/lib/supabase/env";
 import type { Database } from "@/types/database";
@@ -12,7 +13,7 @@ export function createBrowserSupabaseClient() {
 
   const { supabaseUrl, supabaseAnonKey } = getSupabaseBrowserEnv();
 
-  browserClient = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  browserClient = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,

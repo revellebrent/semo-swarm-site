@@ -50,6 +50,37 @@ export type Database = {
           updated_at: string;
         };
       };
+      profile_roles: {
+        Row: {
+          id: string;
+          profile_id: string;
+          role_id: string;
+          created_at: string;
+        };
+      };
+      profiles: {
+        Row: {
+          id: string;
+          first_name: string | null;
+          last_name: string | null;
+          display_name: string | null;
+          email: string | null;
+          phone: string | null;
+          is_active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+      };
+      roles: {
+        Row: {
+          id: string;
+          key: "super_admin" | "club_admin" | "coach";
+          label: string;
+          description: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+      };
       sponsors: {
         Row: {
           id: string;

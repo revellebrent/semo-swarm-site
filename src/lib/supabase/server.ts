@@ -1,17 +1,31 @@
-import { cache } from "react";
-
-import { createClient } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
+import { createServerClient } from "@supabase/ssr";
 
 import { getSupabaseBrowserEnv } from "@/lib/supabase/env";
 import type { Database } from "@/types/database";
 
-export const createServerSupabaseClient = cache(() => {
+export async function createServerSupabaseClient() {
   const { supabaseUrl, supabaseAnonKey } = getSupabaseBrowserEnv();
+  const cookieStore = await cookies();
 
-  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: false,
       autoRefreshToken: false,
+    },
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
+      },
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {
+          // Server Components cannot always write cookies. Middleware keeps sessions refreshed.
+        }
+      },
     },
     global: {
       headers: {
@@ -19,4 +33,4 @@ export const createServerSupabaseClient = cache(() => {
       },
     },
   });
-});
+}
