@@ -47,3 +47,23 @@ export type Sponsor = {
   category: string;
   description: string;
 };
+
+export type QuickLink = {
+  href: string;
+  label: string;
+  description: string;
+  accent: string;
+};
+
+export type Announcement = {
+  title: string;
+  date: string;
+  category: string;
+  summary: string;
+  href: string;
+};
+
+export type FamilyValue = {
+  title: string;
+  description: string;
+};
