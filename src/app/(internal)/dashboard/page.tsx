@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 
+import { AnnouncementManager } from "@/components/dashboard/announcement-manager";
 import { DashboardSectionCard } from "@/components/dashboard/dashboard-section-card";
+import { TryoutManager } from "@/components/dashboard/tryout-manager";
 import { buildPageMetadata } from "@/lib/metadata";
+import { getAdminContentManagementData } from "@/lib/dashboard/content-management";
 import { requireInternalUser } from "@/lib/auth/server";
 import type { RoleKey } from "@/types/models";
 
@@ -92,6 +95,8 @@ const dashboardSections: DashboardSection[] = [
 
 export default async function DashboardPage() {
   const authContext = await requireInternalUser();
+  const isAdmin = authContext.roleKeys.includes("super_admin") || authContext.roleKeys.includes("club_admin");
+  const managementData = isAdmin ? await getAdminContentManagementData() : null;
 
   return (
     <div className="space-y-8">
@@ -136,18 +141,37 @@ export default async function DashboardPage() {
       </section>
 
       <div className="grid gap-6">
-        {dashboardSections.map((section) => (
-          <DashboardSectionCard
-            key={section.id}
-            id={section.id}
-            eyebrow={section.eyebrow}
-            title={section.title}
-            description={section.description}
-            plannedActions={section.plannedActions}
-            allowedRoles={section.allowedRoles}
-            roleKeys={authContext.roleKeys}
-            accent={section.accent}
+        {isAdmin && managementData ? (
+          <AnnouncementManager
+            mode="admin"
+            announcements={managementData.announcements}
+            teamOptions={managementData.teamOptions}
           />
+        ) : null}
+
+        {isAdmin && managementData ? (
+          <TryoutManager
+            mode="admin"
+            tryouts={managementData.tryouts}
+            teamOptions={managementData.teamOptions}
+            coachOptions={managementData.coachOptions}
+          />
+        ) : null}
+
+        {dashboardSections.map((section) => (
+          !isAdmin || (section.id !== "announcements" && section.id !== "tryouts") ? (
+            <DashboardSectionCard
+              key={section.id}
+              id={section.id}
+              eyebrow={section.eyebrow}
+              title={section.title}
+              description={section.description}
+              plannedActions={section.plannedActions}
+              allowedRoles={section.allowedRoles}
+              roleKeys={authContext.roleKeys}
+              accent={section.accent}
+            />
+          ) : null
         ))}
       </div>
     </div>

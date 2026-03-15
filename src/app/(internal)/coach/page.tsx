@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 
+import { AnnouncementManager } from "@/components/dashboard/announcement-manager";
 import { CoachTeamCard } from "@/components/dashboard/coach-team-card";
 import { DashboardSectionCard } from "@/components/dashboard/dashboard-section-card";
+import { TryoutManager } from "@/components/dashboard/tryout-manager";
 import { requireCoachUser } from "@/lib/auth/server";
+import { getCoachContentManagementData } from "@/lib/dashboard/content-management";
 import { getCoachDashboardData } from "@/lib/dashboard/coach";
 import { buildPageMetadata } from "@/lib/metadata";
 
@@ -14,7 +17,10 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default async function CoachDashboardPage() {
   const authContext = await requireCoachUser("/coach");
-  const coachData = await getCoachDashboardData(authContext.user.id);
+  const [coachData, managementData] = await Promise.all([
+    getCoachDashboardData(authContext.user.id),
+    getCoachContentManagementData(authContext.user.id),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -86,33 +92,16 @@ export default async function CoachDashboardPage() {
       </section>
 
       <div className="grid gap-6">
-        <DashboardSectionCard
-          id="team-announcements"
-          eyebrow="Team Announcements"
-          title="Announcement workspace for your teams"
-          description="This section will hold team-level updates, publish states, and future editing tools connected only to the squads you coach."
-          plannedActions={[
-            "Draft and publish team-specific announcements",
-            "Review recent updates across assigned teams",
-            "Expand later into richer editorial tools",
-          ]}
-          allowedRoles={["coach"]}
-          roleKeys={authContext.roleKeys}
-          accent="highlight"
+        <AnnouncementManager
+          mode="coach"
+          announcements={managementData.announcements}
+          teamOptions={managementData.teamOptions}
         />
 
-        <DashboardSectionCard
-          id="team-tryouts"
-          eyebrow="Team Tryouts"
-          title="Coach-managed tryout area"
-          description="Reserved for coach-owned tryouts and team-related evaluation workflows without exposing club-wide admin controls."
-          plannedActions={[
-            "Review assigned or owned tryout listings",
-            "Track team-specific evaluation needs",
-            "Prepare for later tryout editing and status changes",
-          ]}
-          allowedRoles={["coach"]}
-          roleKeys={authContext.roleKeys}
+        <TryoutManager
+          mode="coach"
+          tryouts={managementData.tryouts}
+          teamOptions={managementData.teamOptions}
         />
 
         <DashboardSectionCard

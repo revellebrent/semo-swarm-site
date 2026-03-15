@@ -25,6 +25,31 @@ export type Database = {
           created_at: string;
           updated_at: string;
         };
+        Insert: {
+          id?: string;
+          title: string;
+          slug?: string | null;
+          category?: string | null;
+          summary: string;
+          body?: string | null;
+          scope: "club" | "team";
+          team_id?: string | null;
+          author_profile_id?: string | null;
+          is_published?: boolean;
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          title?: string;
+          slug?: string | null;
+          category?: string | null;
+          summary?: string;
+          body?: string | null;
+          is_published?: boolean;
+          published_at?: string | null;
+          updated_at?: string;
+        };
       };
       coach_team_assignments: {
         Row: {
@@ -209,6 +234,46 @@ export type Database = {
           is_public: boolean;
           created_at: string;
           updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          age_group: string;
+          format: "club_wide" | "coach_independent";
+          description?: string | null;
+          season?: string | null;
+          location?: string | null;
+          start_date?: string | null;
+          end_date?: string | null;
+          registration_label?: string | null;
+          registration_href?: string | null;
+          status?: "draft" | "open" | "closed";
+          team_id?: string | null;
+          owner_coach_id?: string | null;
+          owner_profile_id?: string | null;
+          is_public?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          slug?: string;
+          title?: string;
+          age_group?: string;
+          format?: "club_wide" | "coach_independent";
+          description?: string | null;
+          season?: string | null;
+          location?: string | null;
+          start_date?: string | null;
+          end_date?: string | null;
+          registration_label?: string | null;
+          registration_href?: string | null;
+          status?: "draft" | "open" | "closed";
+          team_id?: string | null;
+          owner_coach_id?: string | null;
+          owner_profile_id?: string | null;
+          is_public?: boolean;
+          updated_at?: string;
         };
       };
     };
