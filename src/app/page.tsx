@@ -6,9 +6,13 @@ import { SponsorStrip } from "@/components/home/sponsor-strip";
 import { SectionWrapper } from "@/components/layout/section-wrapper";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { clubPillars, teams } from "@/data/site";
+import { TeamCard } from "@/components/teams/team-card";
+import { getAllTeams } from "@/data/teams";
+import { clubPillars } from "@/data/site";
 
 export default function HomePage() {
+  const featuredTeams = getAllTeams();
+
   return (
     <>
       <HomeHero />
@@ -63,18 +67,8 @@ export default function HomePage() {
         </div>
 
         <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {teams.map((team) => (
-            <article key={team.slug} className="rounded-3xl border border-white/10 bg-slate-950/70 p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">{team.ageGroup}</p>
-              <h3 className="mt-3 text-2xl font-semibold text-white">{team.name}</h3>
-              <p className="mt-3 text-sm leading-7 text-slate-300">{team.summary}</p>
-              <p className="mt-5 text-sm text-slate-400">Focus: {team.focus}</p>
-              <div className="mt-6">
-                <Button href={`/teams/${team.slug}`} variant="ghost">
-                  View Team Details
-                </Button>
-              </div>
-            </article>
+          {featuredTeams.map((team) => (
+            <TeamCard key={team.slug} team={team} />
           ))}
         </div>
       </SectionWrapper>

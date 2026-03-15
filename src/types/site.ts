@@ -27,9 +27,62 @@ export type TeamSummary = {
   slug: string;
   name: string;
   ageGroup: string;
+  level: string;
+  gender: "Girls" | "Boys" | "Coed";
   focus: string;
   summary: string;
-  trainingDays: string;
+  homeBase: string;
+};
+
+export type TeamCoach = {
+  id: string;
+  name: string;
+  role: string;
+  specialty: string;
+  bio: string;
+  license: string;
+  email?: string;
+};
+
+export type TeamAnnouncement = {
+  id: string;
+  title: string;
+  date: string;
+  category: string;
+  summary: string;
+};
+
+export type TeamPracticeDetails = {
+  days: string[];
+  time: string;
+  location: string;
+  season: string;
+  notes: string;
+};
+
+export type TeamScheduleItem = {
+  id: string;
+  opponent: string;
+  date: string;
+  location: string;
+  type: string;
+};
+
+export type TeamTryoutCallout = {
+  title: string;
+  description: string;
+  href: string;
+  ctaLabel: string;
+};
+
+export type Team = TeamSummary & {
+  overview: string;
+  playerProfile: string;
+  coaches: TeamCoach[];
+  practice: TeamPracticeDetails;
+  schedule: TeamScheduleItem[];
+  announcements: TeamAnnouncement[];
+  tryoutCallout?: TeamTryoutCallout;
   homeBase: string;
   seasonGoals: string[];
 };

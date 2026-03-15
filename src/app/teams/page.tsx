@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 
+import { TeamCard } from "@/components/teams/team-card";
 import { SectionWrapper } from "@/components/layout/section-wrapper";
-import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/ui/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { teams } from "@/data/site";
+import { getTeamsGroupedByAgeGroup } from "@/data/teams";
 
 export const metadata: Metadata = {
   title: "Teams",
 };
 
 export default function TeamsPage() {
+  const teamsByAgeGroup = getTeamsGroupedByAgeGroup();
+  const ageGroups = Object.keys(teamsByAgeGroup);
+
   return (
     <>
       <PageHero
@@ -25,32 +28,27 @@ export default function TeamsPage() {
       <SectionWrapper>
         <SectionHeading
           eyebrow="Current Groups"
-          title="Squads designed to challenge players the right way."
-          description="These sample rosters show how the club can present team-level details today while staying ready for future CMS, roster management, and database-backed content."
+          title="Team cards organized by age group and ready for future live data."
+          description="The page is intentionally structured around reusable data and UI so mock content can later be replaced with database-driven roster, coach, and schedule records."
         />
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {teams.map((team) => (
-            <article key={team.slug} className="rounded-3xl border border-white/10 bg-white/5 p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">{team.ageGroup}</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white">{team.name}</h2>
-              <p className="mt-3 text-sm leading-7 text-slate-300">{team.summary}</p>
-              <dl className="mt-6 grid gap-3 text-sm text-slate-400">
+        <div className="mt-10 space-y-10">
+          {ageGroups.map((ageGroup) => (
+            <section key={ageGroup} className="space-y-5">
+              <div className="flex items-end justify-between gap-4 border-b border-white/10 pb-4">
                 <div>
-                  <dt className="font-semibold text-white">Training Days</dt>
-                  <dd>{team.trainingDays}</dd>
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Age Group</p>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">{ageGroup}</h2>
                 </div>
-                <div>
-                  <dt className="font-semibold text-white">Home Base</dt>
-                  <dd>{team.homeBase}</dd>
-                </div>
-              </dl>
-              <div className="mt-6">
-                <Button href={`/teams/${team.slug}`} variant="secondary">
-                  Open Team Page
-                </Button>
+                <p className="text-sm text-slate-400">{teamsByAgeGroup[ageGroup].length} active team listing</p>
               </div>
-            </article>
+
+              <div className="grid gap-5 lg:grid-cols-2">
+                {teamsByAgeGroup[ageGroup].map((team) => (
+                  <TeamCard key={team.slug} team={team} />
+                ))}
+              </div>
+            </section>
           ))}
         </div>
       </SectionWrapper>

@@ -6,7 +6,6 @@ import type {
   NavItem,
   QuickLink,
   Sponsor,
-  TeamSummary,
 } from "@/types/site";
 
 export const siteConfig = {
@@ -58,54 +57,6 @@ export const clubPillars = [
     title: "Long-Term Development",
     description:
       "We prioritize progression over shortcuts so players grow with confidence, resilience, and tactical IQ.",
-  },
-];
-
-export const teams: TeamSummary[] = [
-  {
-    slug: "u11-girls-academy",
-    name: "Swarm U11 Girls Academy",
-    ageGroup: "U11 Girls",
-    focus: "Ball mastery and confidence in possession",
-    summary:
-      "A foundation-focused squad for developing players ready to sharpen technique and embrace a fast, team-first playing style.",
-    trainingDays: "Monday and Thursday",
-    homeBase: "Cape Girardeau SportsPlex",
-    seasonGoals: [
-      "Build confidence receiving under pressure",
-      "Introduce attacking principles in wide spaces",
-      "Strengthen competitive match habits",
-    ],
-  },
-  {
-    slug: "u13-boys-premier",
-    name: "Swarm U13 Boys Premier",
-    ageGroup: "U13 Boys",
-    focus: "Press-resistant buildup and game tempo",
-    summary:
-      "An advanced environment for committed players who want faster decisions, cleaner combination play, and disciplined pressing.",
-    trainingDays: "Tuesday and Friday",
-    homeBase: "Shawnee Park Complex",
-    seasonGoals: [
-      "Improve buildout patterns from the back",
-      "Develop coordinated team pressing triggers",
-      "Raise physical readiness for tournament play",
-    ],
-  },
-  {
-    slug: "u15-girls-premier",
-    name: "Swarm U15 Girls Premier",
-    ageGroup: "U15 Girls",
-    focus: "Tactical maturity and attacking variety",
-    summary:
-      "A high-expectation group preparing for top regional competition with a focus on speed of play and mentality.",
-    trainingDays: "Monday, Wednesday, and Sunday",
-    homeBase: "Semo Training Grounds",
-    seasonGoals: [
-      "Create more chances through central overloads",
-      "Refine transition defending after turnovers",
-      "Develop leadership across the spine of the team",
-    ],
   },
 ];
 
