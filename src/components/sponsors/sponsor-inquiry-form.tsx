@@ -129,6 +129,7 @@ export function SponsorInquiryForm() {
           placeholder="Enter your business or organization name"
           required
           error={errors.businessName}
+          disabled={isPending}
         />
         <FormField
           id="contactName"
@@ -139,6 +140,7 @@ export function SponsorInquiryForm() {
           placeholder="Enter the main contact name"
           required
           error={errors.contactName}
+          disabled={isPending}
         />
       </div>
 
@@ -153,6 +155,7 @@ export function SponsorInquiryForm() {
           placeholder="Enter the best email for follow-up"
           required
           error={errors.email}
+          disabled={isPending}
         />
         <FormField
           id="phone"
@@ -162,6 +165,7 @@ export function SponsorInquiryForm() {
           onChange={(event) => updateField("phone", event.target.value)}
           type="tel"
           placeholder="Optional phone number"
+          disabled={isPending}
         />
       </div>
 
@@ -177,6 +181,7 @@ export function SponsorInquiryForm() {
         required
         error={errors.interest}
         helperText="This inquiry is stored in Supabase so admins can review it later."
+        disabled={isPending}
       />
 
       <FormField
@@ -189,23 +194,27 @@ export function SponsorInquiryForm() {
         placeholder="Tell the club about your goals, preferred sponsorship level, or partnership ideas."
         required
         error={errors.message}
+        disabled={isPending}
       />
 
-      {actionState.status === "success" ? (
-        <div className="rounded-[1.4rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200">
+      {actionState.message ? (
+        <div
+          aria-live="polite"
+          className={[
+            "rounded-[1.4rem] px-4 py-3 text-sm",
+            actionState.status === "success"
+              ? "border border-emerald-400/25 bg-emerald-400/10 text-emerald-200"
+              : "border border-rose-400/25 bg-rose-400/10 text-rose-200",
+          ].join(" ")}
+        >
           {actionState.message}
         </div>
-      ) : null}
-
-      {Object.keys(errors).length > 0 ? (
-        <div className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+      ) : Object.keys(errors).length > 0 ? (
+        <div
+          aria-live="polite"
+          className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200"
+        >
           Please complete the required fields before submitting.
-        </div>
-      ) : null}
-
-      {actionState.status === "error" && actionState.message ? (
-        <div className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
-          {actionState.message}
         </div>
       ) : null}
 

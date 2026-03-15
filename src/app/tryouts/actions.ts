@@ -64,6 +64,20 @@ export async function submitTryoutRegistration(
   }
 
   const supabase = await createServerSupabaseClient();
+  const { data: tryout, error: tryoutError } = await supabase
+    .from("tryouts")
+    .select("id")
+    .eq("id", tryoutId)
+    .eq("is_public", true)
+    .maybeSingle();
+
+  if (tryoutError || !tryout) {
+    return {
+      status: "error",
+      message: "That tryout is no longer available for online registration. Please refresh the page and try again.",
+    };
+  }
+
   const { error } = await supabase.from("tryout_registrations").insert({
     tryout_id: tryoutId,
     player_first_name: playerFirstName,

@@ -21,6 +21,7 @@ type FormFieldProps = {
   rows?: number;
   options?: FormFieldOption[];
   helperText?: string;
+  disabled?: boolean;
 };
 
 const baseClasses =
@@ -40,12 +41,14 @@ export function FormField({
   rows = 5,
   options = [],
   helperText,
+  disabled = false,
 }: FormFieldProps) {
   const fieldClasses = [
     baseClasses,
     error
       ? "border-rose-400/60 focus:border-rose-300"
       : "border-white/10 focus:border-amber-300/50",
+    disabled ? "cursor-not-allowed opacity-60" : "",
   ].join(" ");
 
   return (
@@ -66,6 +69,7 @@ export function FormField({
           className={`${fieldClasses} resize-none`}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
+          disabled={disabled}
         />
       ) : null}
 
@@ -78,6 +82,7 @@ export function FormField({
           className={fieldClasses}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
+          disabled={disabled}
         >
           <option value="">{placeholder ?? "Select an option"}</option>
           {options.map((option) => (
@@ -99,6 +104,7 @@ export function FormField({
           className={fieldClasses}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
+          disabled={disabled}
         />
       ) : null}
 

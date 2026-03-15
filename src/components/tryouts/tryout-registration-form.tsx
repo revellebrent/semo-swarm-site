@@ -72,6 +72,7 @@ export function TryoutRegistrationForm({
     ],
     [clubWideTryoutPrograms, independentCoachTryouts],
   );
+  const hasTryoutOptions = tryoutOptions.length > 0;
 
   function updateField<Key extends keyof TryoutRegistrationFormState>(key: Key, value: string) {
     setFormState((current) => ({ ...current, [key]: value }));
@@ -122,6 +123,14 @@ export function TryoutRegistrationForm({
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+    if (!hasTryoutOptions) {
+      setActionState({
+        status: "error",
+        message: "No public tryouts are available for registration yet.",
+      });
+      return;
+    }
+
     const nextErrors = validate(formState);
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
@@ -147,6 +156,12 @@ export function TryoutRegistrationForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {!hasTryoutOptions ? (
+        <div className="rounded-[1.4rem] border border-dashed border-white/15 bg-white/5 px-4 py-4 text-sm leading-7 text-slate-300">
+          No public tryouts are open for registration yet. Families can still contact the club below for placement guidance while new sessions are being posted.
+        </div>
+      ) : null}
+
       <div className="grid gap-5 md:grid-cols-2">
         <FormField
           id="tryoutId"
@@ -159,6 +174,7 @@ export function TryoutRegistrationForm({
           options={tryoutOptions}
           required
           error={errors.tryoutId}
+          disabled={!hasTryoutOptions || isPending}
         />
         <FormField
           id="birthYear"
@@ -171,6 +187,7 @@ export function TryoutRegistrationForm({
           required
           error={errors.birthYear}
           helperText="This is submitted directly to the tryout registration record in Supabase."
+          disabled={!hasTryoutOptions || isPending}
         />
       </div>
 
@@ -184,6 +201,7 @@ export function TryoutRegistrationForm({
           placeholder="Enter player first name"
           required
           error={errors.playerFirstName}
+          disabled={!hasTryoutOptions || isPending}
         />
         <FormField
           id="playerLastName"
@@ -194,6 +212,7 @@ export function TryoutRegistrationForm({
           placeholder="Enter player last name"
           required
           error={errors.playerLastName}
+          disabled={!hasTryoutOptions || isPending}
         />
       </div>
 
@@ -207,6 +226,7 @@ export function TryoutRegistrationForm({
           placeholder="Enter parent or guardian name"
           required
           error={errors.parentName}
+          disabled={!hasTryoutOptions || isPending}
         />
         <FormField
           id="parentEmail"
@@ -218,6 +238,7 @@ export function TryoutRegistrationForm({
           placeholder="Enter best email for follow-up"
           required
           error={errors.parentEmail}
+          disabled={!hasTryoutOptions || isPending}
         />
         <FormField
           id="parentPhone"
@@ -229,6 +250,7 @@ export function TryoutRegistrationForm({
           placeholder="Enter best phone number"
           required
           error={errors.parentPhone}
+          disabled={!hasTryoutOptions || isPending}
         />
       </div>
 
@@ -241,28 +263,32 @@ export function TryoutRegistrationForm({
         fieldType="textarea"
         placeholder="Share current team, experience level, or anything the club should know."
         helperText="Optional notes are stored with the Supabase registration record."
+        disabled={!hasTryoutOptions || isPending}
       />
 
-      {actionState.status === "success" ? (
-        <div className="rounded-[1.4rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200">
+      {actionState.message ? (
+        <div
+          aria-live="polite"
+          className={[
+            "rounded-[1.4rem] px-4 py-3 text-sm",
+            actionState.status === "success"
+              ? "border border-emerald-400/25 bg-emerald-400/10 text-emerald-200"
+              : "border border-rose-400/25 bg-rose-400/10 text-rose-200",
+          ].join(" ")}
+        >
           {actionState.message}
         </div>
-      ) : null}
-
-      {Object.keys(errors).length > 0 ? (
-        <div className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+      ) : Object.keys(errors).length > 0 ? (
+        <div
+          aria-live="polite"
+          className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200"
+        >
           Please fix the required fields before submitting.
         </div>
       ) : null}
 
-      {actionState.status === "error" && actionState.message ? (
-        <div className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
-          {actionState.message}
-        </div>
-      ) : null}
-
       <div className="flex flex-wrap items-center gap-3 pt-1">
-        <SubmitButton isPending={isPending} />
+        {hasTryoutOptions ? <SubmitButton isPending={isPending} /> : null}
         <p className="text-sm text-slate-400">Registrations now submit directly into the club&apos;s Supabase table.</p>
       </div>
     </form>

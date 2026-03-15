@@ -14,6 +14,7 @@ type AnnouncementManagerProps = {
 
 export function AnnouncementManager({ mode, announcements, teamOptions }: AnnouncementManagerProps) {
   const isAdmin = mode === "admin";
+  const canCreateAnnouncement = isAdmin || teamOptions.length > 0;
 
   return (
     <section
@@ -41,71 +42,78 @@ export function AnnouncementManager({ mode, announcements, teamOptions }: Announ
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <form action={createAnnouncementAction} className="rounded-[1.7rem] border border-white/10 bg-slate-950/55 p-5">
-          <input type="hidden" name="mode" value={mode} />
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Create Announcement</p>
-          <div className="mt-5 grid gap-4">
-            <DashboardFormField
-              id={`announcement-title-${mode}`}
-              name="title"
-              label="Title"
-              placeholder="Enter announcement headline"
-              required
-            />
-            <DashboardFormField
-              id={`announcement-category-${mode}`}
-              name="category"
-              label="Category"
-              placeholder="Club News, Events, Player Development"
-            />
-            {!isAdmin ? (
+        {canCreateAnnouncement ? (
+          <form action={createAnnouncementAction} className="rounded-[1.7rem] border border-white/10 bg-slate-950/55 p-5">
+            <input type="hidden" name="mode" value={mode} />
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Create Announcement</p>
+            <div className="mt-5 grid gap-4">
               <DashboardFormField
-                id={`announcement-team-${mode}`}
-                name="teamId"
-                label="Team"
-                fieldType="select"
-                placeholder="Select one of your teams"
-                options={teamOptions}
+                id={`announcement-title-${mode}`}
+                name="title"
+                label="Title"
+                placeholder="Enter announcement headline"
                 required
               />
-            ) : null}
-            <DashboardFormField
-              id={`announcement-summary-${mode}`}
-              name="summary"
-              label="Summary"
-              fieldType="textarea"
-              rows={4}
-              placeholder="Write the public summary that families will see first."
-              required
-            />
-            <DashboardFormField
-              id={`announcement-body-${mode}`}
-              name="body"
-              label="Body"
-              fieldType="textarea"
-              rows={5}
-              placeholder="Optional expanded announcement details."
-            />
-            <DashboardFormField
-              id={`announcement-publish-${mode}`}
-              name="publishState"
-              label="Publish State"
-              fieldType="select"
-              defaultValue="published"
-              options={[
-                { label: "Published", value: "published" },
-                { label: "Draft", value: "draft" },
-              ]}
-              required
-            />
+              <DashboardFormField
+                id={`announcement-category-${mode}`}
+                name="category"
+                label="Category"
+                placeholder="Club News, Events, Player Development"
+              />
+              {!isAdmin ? (
+                <DashboardFormField
+                  id={`announcement-team-${mode}`}
+                  name="teamId"
+                  label="Team"
+                  fieldType="select"
+                  placeholder="Select one of your teams"
+                  options={teamOptions}
+                  required
+                />
+              ) : null}
+              <DashboardFormField
+                id={`announcement-summary-${mode}`}
+                name="summary"
+                label="Summary"
+                fieldType="textarea"
+                rows={4}
+                placeholder="Write the public summary that families will see first."
+                required
+              />
+              <DashboardFormField
+                id={`announcement-body-${mode}`}
+                name="body"
+                label="Body"
+                fieldType="textarea"
+                rows={5}
+                placeholder="Optional expanded announcement details."
+              />
+              <DashboardFormField
+                id={`announcement-publish-${mode}`}
+                name="publishState"
+                label="Publish State"
+                fieldType="select"
+                defaultValue="published"
+                options={[
+                  { label: "Published", value: "published" },
+                  { label: "Draft", value: "draft" },
+                ]}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="mt-5 inline-flex items-center justify-center rounded-full border border-amber-300/40 bg-amber-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_30px_rgba(245,158,11,0.2)] transition hover:bg-amber-200"
+            >
+              Create Announcement
+            </button>
+          </form>
+        ) : (
+          <div className="rounded-[1.7rem] border border-dashed border-white/15 bg-slate-950/55 p-6 text-sm leading-7 text-slate-300">
+            This coach account does not have any team assignments yet, so announcement creation is temporarily unavailable.
+            Once a team is assigned in Supabase, this section will unlock automatically.
           </div>
-          <button
-            type="submit"
-            className="mt-5 inline-flex items-center justify-center rounded-full border border-amber-300/40 bg-amber-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_30px_rgba(245,158,11,0.2)] transition hover:bg-amber-200"
-          >
-            Create Announcement
-          </button>
-        </form>
+        )}
 
         <div className="grid gap-4">
           {announcements.length > 0 ? (

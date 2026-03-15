@@ -19,6 +19,7 @@ type TryoutManagerProps = {
 
 export function TryoutManager({ mode, tryouts, teamOptions, coachOptions = [] }: TryoutManagerProps) {
   const isAdmin = mode === "admin";
+  const canCreateTryout = isAdmin || teamOptions.length > 0;
 
   return (
     <section
@@ -46,152 +47,159 @@ export function TryoutManager({ mode, tryouts, teamOptions, coachOptions = [] }:
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-        <form action={createTryoutAction} className="rounded-[1.7rem] border border-white/10 bg-slate-950/55 p-5">
-          <input type="hidden" name="mode" value={mode} />
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Create Tryout</p>
-          <div className="mt-5 grid gap-4">
-            <DashboardFormField
-              id={`tryout-title-${mode}`}
-              name="title"
-              label="Title"
-              placeholder="Enter tryout or evaluation title"
-              required
-            />
-            <DashboardFormField
-              id={`tryout-slug-${mode}`}
-              name="slug"
-              label="Slug"
-              placeholder="auto-generated-if-left-blank"
-              helperText="If left blank, a slug is generated from the title."
-            />
-            <div className="grid gap-4 md:grid-cols-2">
+        {canCreateTryout ? (
+          <form action={createTryoutAction} className="rounded-[1.7rem] border border-white/10 bg-slate-950/55 p-5">
+            <input type="hidden" name="mode" value={mode} />
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Create Tryout</p>
+            <div className="mt-5 grid gap-4">
               <DashboardFormField
-                id={`tryout-age-group-${mode}`}
-                name="ageGroup"
-                label="Age Group"
-                placeholder="U13-U15"
+                id={`tryout-title-${mode}`}
+                name="title"
+                label="Title"
+                placeholder="Enter tryout or evaluation title"
                 required
               />
               <DashboardFormField
-                id={`tryout-status-${mode}`}
-                name="status"
-                label="Status"
+                id={`tryout-slug-${mode}`}
+                name="slug"
+                label="Slug"
+                placeholder="auto-generated-if-left-blank"
+                helperText="If left blank, a slug is generated from the title."
+              />
+              <div className="grid gap-4 md:grid-cols-2">
+                <DashboardFormField
+                  id={`tryout-age-group-${mode}`}
+                  name="ageGroup"
+                  label="Age Group"
+                  placeholder="U13-U15"
+                  required
+                />
+                <DashboardFormField
+                  id={`tryout-status-${mode}`}
+                  name="status"
+                  label="Status"
+                  fieldType="select"
+                  defaultValue="draft"
+                  options={[
+                    { label: "Draft", value: "draft" },
+                    { label: "Open", value: "open" },
+                    { label: "Closed", value: "closed" },
+                  ]}
+                  required
+                />
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <DashboardFormField
+                  id={`tryout-format-${mode}`}
+                  name="format"
+                  label="Format"
+                  fieldType="select"
+                  defaultValue={isAdmin ? "club_wide" : "coach_independent"}
+                  options={
+                    isAdmin
+                      ? [
+                          { label: "Club Wide", value: "club_wide" },
+                          { label: "Coach Independent", value: "coach_independent" },
+                        ]
+                      : [{ label: "Coach Independent", value: "coach_independent" }]
+                  }
+                  required
+                />
+                <DashboardFormField
+                  id={`tryout-team-${mode}`}
+                  name="teamId"
+                  label="Team"
+                  fieldType="select"
+                  placeholder="Optional team association"
+                  options={teamOptions}
+                />
+              </div>
+              {isAdmin ? (
+                <DashboardFormField
+                  id={`tryout-owner-${mode}`}
+                  name="ownerCoachId"
+                  label="Owner Coach"
+                  fieldType="select"
+                  placeholder="Optional coach owner"
+                  options={coachOptions}
+                />
+              ) : null}
+              <div className="grid gap-4 md:grid-cols-2">
+                <DashboardFormField
+                  id={`tryout-location-${mode}`}
+                  name="location"
+                  label="Location"
+                  placeholder="Semo Training Grounds"
+                />
+                <DashboardFormField
+                  id={`tryout-season-${mode}`}
+                  name="season"
+                  label="Season"
+                  placeholder="2026-2027 Club Year"
+                />
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <DashboardFormField
+                  id={`tryout-start-${mode}`}
+                  name="startDate"
+                  label="Start Date"
+                  type="date"
+                />
+                <DashboardFormField
+                  id={`tryout-end-${mode}`}
+                  name="endDate"
+                  label="End Date"
+                  type="date"
+                />
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                <DashboardFormField
+                  id={`tryout-registration-label-${mode}`}
+                  name="registrationLabel"
+                  label="Registration Label"
+                  placeholder="Request Evaluation"
+                />
+                <DashboardFormField
+                  id={`tryout-registration-href-${mode}`}
+                  name="registrationHref"
+                  label="Registration Link"
+                  placeholder="/contact"
+                />
+              </div>
+              <DashboardFormField
+                id={`tryout-description-${mode}`}
+                name="description"
+                label="Description"
+                fieldType="textarea"
+                rows={5}
+                placeholder="Describe the purpose, training standard, and player fit."
+              />
+              <DashboardFormField
+                id={`tryout-public-${mode}`}
+                name="isPublic"
+                label="Public Visibility"
                 fieldType="select"
-                defaultValue="draft"
+                defaultValue="true"
                 options={[
-                  { label: "Draft", value: "draft" },
-                  { label: "Open", value: "open" },
-                  { label: "Closed", value: "closed" },
+                  { label: "Visible On Public Site", value: "true" },
+                  { label: "Internal Only", value: "false" },
                 ]}
                 required
               />
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <DashboardFormField
-                id={`tryout-format-${mode}`}
-                name="format"
-                label="Format"
-                fieldType="select"
-                defaultValue={isAdmin ? "club_wide" : "coach_independent"}
-                options={
-                  isAdmin
-                    ? [
-                        { label: "Club Wide", value: "club_wide" },
-                        { label: "Coach Independent", value: "coach_independent" },
-                      ]
-                    : [{ label: "Coach Independent", value: "coach_independent" }]
-                }
-                required
-              />
-              <DashboardFormField
-                id={`tryout-team-${mode}`}
-                name="teamId"
-                label="Team"
-                fieldType="select"
-                placeholder="Optional team association"
-                options={teamOptions}
-              />
-            </div>
-            {isAdmin ? (
-              <DashboardFormField
-                id={`tryout-owner-${mode}`}
-                name="ownerCoachId"
-                label="Owner Coach"
-                fieldType="select"
-                placeholder="Optional coach owner"
-                options={coachOptions}
-              />
-            ) : null}
-            <div className="grid gap-4 md:grid-cols-2">
-              <DashboardFormField
-                id={`tryout-location-${mode}`}
-                name="location"
-                label="Location"
-                placeholder="Semo Training Grounds"
-              />
-              <DashboardFormField
-                id={`tryout-season-${mode}`}
-                name="season"
-                label="Season"
-                placeholder="2026-2027 Club Year"
-              />
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <DashboardFormField
-                id={`tryout-start-${mode}`}
-                name="startDate"
-                label="Start Date"
-                type="date"
-              />
-              <DashboardFormField
-                id={`tryout-end-${mode}`}
-                name="endDate"
-                label="End Date"
-                type="date"
-              />
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <DashboardFormField
-                id={`tryout-registration-label-${mode}`}
-                name="registrationLabel"
-                label="Registration Label"
-                placeholder="Request Evaluation"
-              />
-              <DashboardFormField
-                id={`tryout-registration-href-${mode}`}
-                name="registrationHref"
-                label="Registration Link"
-                placeholder="/contact"
-              />
-            </div>
-            <DashboardFormField
-              id={`tryout-description-${mode}`}
-              name="description"
-              label="Description"
-              fieldType="textarea"
-              rows={5}
-              placeholder="Describe the purpose, training standard, and player fit."
-            />
-            <DashboardFormField
-              id={`tryout-public-${mode}`}
-              name="isPublic"
-              label="Public Visibility"
-              fieldType="select"
-              defaultValue="true"
-              options={[
-                { label: "Visible On Public Site", value: "true" },
-                { label: "Internal Only", value: "false" },
-              ]}
-              required
-            />
+            <button
+              type="submit"
+              className="mt-5 inline-flex items-center justify-center rounded-full border border-amber-300/40 bg-amber-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_30px_rgba(245,158,11,0.2)] transition hover:bg-amber-200"
+            >
+              Create Tryout
+            </button>
+          </form>
+        ) : (
+          <div className="rounded-[1.7rem] border border-dashed border-white/15 bg-slate-950/55 p-6 text-sm leading-7 text-slate-300">
+            This coach account does not have any assigned teams yet, so coach-owned tryouts are temporarily locked.
+            Once a team assignment is in place, this form will become available automatically.
           </div>
-          <button
-            type="submit"
-            className="mt-5 inline-flex items-center justify-center rounded-full border border-amber-300/40 bg-amber-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_12px_30px_rgba(245,158,11,0.2)] transition hover:bg-amber-200"
-          >
-            Create Tryout
-          </button>
-        </form>
+        )}
 
         <div className="grid gap-4">
           {tryouts.length > 0 ? (
