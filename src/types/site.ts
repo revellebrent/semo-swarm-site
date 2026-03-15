@@ -187,3 +187,26 @@ export type SponsorInquiryField = {
   label: string;
   placeholder: string;
 };
+
+export type ContactFormField = {
+  id: string;
+  label: string;
+  placeholder: string;
+  type?: "text" | "email" | "tel" | "textarea";
+};
+
+export type ContactQuickAnswer = {
+  id: string;
+  question: string;
+  answer: string;
+};
+
+export type ContactBlock = {
+  id: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  primaryContact: string;
+  ctaHref: string;
+  ctaLabel: string;
+};
