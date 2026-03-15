@@ -167,3 +167,23 @@ export type TryoutFaq = {
   question: string;
   answer: string;
 };
+
+export type SponsorTier = {
+  id: string;
+  name: string;
+  investment: string;
+  description: string;
+  highlights: string[];
+};
+
+export type SponsorBenefit = {
+  id: string;
+  title: string;
+  description: string;
+};
+
+export type SponsorInquiryField = {
+  id: string;
+  label: string;
+  placeholder: string;
+};
