@@ -120,3 +120,50 @@ export type FamilyValue = {
   title: string;
   description: string;
 };
+
+export type TryoutOverview = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  season: string;
+  registrationStatus: string;
+  notes: string[];
+};
+
+export type TryoutProgram = {
+  id: string;
+  title: string;
+  ageGroup: string;
+  format: string;
+  location: string;
+  dates: string;
+  description: string;
+  registrationLabel: string;
+  registrationHref: string;
+};
+
+export type IndependentTryout = {
+  id: string;
+  coachName: string;
+  role: string;
+  program: string;
+  ageFocus: string;
+  summary: string;
+  contact: string;
+  registrationHref: string;
+};
+
+export type RegistrationCard = {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+  ctaLabel: string;
+  variant?: "primary" | "secondary";
+};
+
+export type TryoutFaq = {
+  id: string;
+  question: string;
+  answer: string;
+};
