@@ -158,7 +158,7 @@ export default async function TryoutsPage() {
               Submit a player interest form.
             </h2>
             <p className="mt-4 text-sm leading-7 text-slate-300">
-              This is a front-end placeholder flow with validation, loading state, and success messaging already built in.
+              This registration flow now validates required fields and submits directly into Supabase for club review.
             </p>
 
             <div className="mt-8">

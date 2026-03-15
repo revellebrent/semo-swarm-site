@@ -1,15 +1,17 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 
 import { FormField } from "@/components/forms/form-field";
+import { submitTryoutRegistration, type TryoutRegistrationActionState } from "@/app/tryouts/actions";
 import { Button } from "@/components/ui/button";
 import type { IndependentTryout, TryoutProgram } from "@/types/site";
 
 type TryoutRegistrationFormState = {
   tryoutId: string;
-  playerName: string;
+  playerFirstName: string;
+  playerLastName: string;
   birthYear: string;
   parentName: string;
   parentEmail: string;
@@ -21,7 +23,8 @@ type TryoutRegistrationFormErrors = Partial<Record<keyof TryoutRegistrationFormS
 
 const initialState: TryoutRegistrationFormState = {
   tryoutId: "",
-  playerName: "",
+  playerFirstName: "",
+  playerLastName: "",
   birthYear: "",
   parentName: "",
   parentEmail: "",
@@ -34,14 +37,27 @@ type TryoutRegistrationFormProps = {
   independentCoachTryouts: IndependentTryout[];
 };
 
+const initialActionState: TryoutRegistrationActionState = {
+  status: "idle",
+  message: null,
+};
+
+function SubmitButton({ isPending }: { isPending: boolean }) {
+  return (
+    <Button type="submit" size="lg" disabled={isPending}>
+      {isPending ? "Submitting..." : "Submit Registration"}
+    </Button>
+  );
+}
+
 export function TryoutRegistrationForm({
   clubWideTryoutPrograms,
   independentCoachTryouts,
 }: TryoutRegistrationFormProps) {
   const [formState, setFormState] = useState<TryoutRegistrationFormState>(initialState);
   const [errors, setErrors] = useState<TryoutRegistrationFormErrors>({});
-  const [submitState, setSubmitState] = useState<"idle" | "success" | "error">("idle");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [actionState, setActionState] = useState<TryoutRegistrationActionState>(initialActionState);
+  const [isPending, startTransition] = useTransition();
 
   const tryoutOptions = useMemo(
     () => [
@@ -60,7 +76,9 @@ export function TryoutRegistrationForm({
   function updateField<Key extends keyof TryoutRegistrationFormState>(key: Key, value: string) {
     setFormState((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
-    setSubmitState("idle");
+    if (actionState.status !== "idle") {
+      setActionState(initialActionState);
+    }
   }
 
   function validate(values: TryoutRegistrationFormState) {
@@ -70,8 +88,12 @@ export function TryoutRegistrationForm({
       nextErrors.tryoutId = "Please choose a tryout or evaluation option.";
     }
 
-    if (!values.playerName.trim()) {
-      nextErrors.playerName = "Player name is required.";
+    if (!values.playerFirstName.trim()) {
+      nextErrors.playerFirstName = "Player first name is required.";
+    }
+
+    if (!values.playerLastName.trim()) {
+      nextErrors.playerLastName = "Player last name is required.";
     }
 
     if (!values.birthYear.trim()) {
@@ -97,29 +119,30 @@ export function TryoutRegistrationForm({
     return nextErrors;
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const nextErrors = validate(formState);
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      setSubmitState("error");
+      setActionState({
+        status: "error",
+        message: "Please complete the required registration fields before submitting.",
+      });
       return;
     }
 
-    setIsSubmitting(true);
-    setSubmitState("idle");
+    const submissionData = new FormData(event.currentTarget);
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 700));
-      setSubmitState("success");
-      setErrors({});
-      setFormState(initialState);
-    } catch {
-      setSubmitState("error");
-    } finally {
-      setIsSubmitting(false);
-    }
+    startTransition(async () => {
+      const result = await submitTryoutRegistration(initialActionState, submissionData);
+      setActionState(result);
+
+      if (result.status === "success") {
+        setErrors({});
+        setFormState(initialState);
+      }
+    });
   }
 
   return (
@@ -127,6 +150,7 @@ export function TryoutRegistrationForm({
       <div className="grid gap-5 md:grid-cols-2">
         <FormField
           id="tryoutId"
+          name="tryoutId"
           label="Tryout Selection"
           value={formState.tryoutId}
           onChange={(event) => updateField("tryoutId", event.target.value)}
@@ -138,6 +162,7 @@ export function TryoutRegistrationForm({
         />
         <FormField
           id="birthYear"
+          name="birthYear"
           label="Player Birth Year"
           value={formState.birthYear}
           onChange={(event) => updateField("birthYear", event.target.value)}
@@ -145,22 +170,37 @@ export function TryoutRegistrationForm({
           placeholder="Example: 2013"
           required
           error={errors.birthYear}
-          helperText="This can later map directly into a Supabase table or API payload."
+          helperText="This is submitted directly to the tryout registration record in Supabase."
         />
       </div>
 
       <div className="grid gap-5 md:grid-cols-2">
         <FormField
-          id="playerName"
-          label="Player Name"
-          value={formState.playerName}
-          onChange={(event) => updateField("playerName", event.target.value)}
-          placeholder="Enter player full name"
+          id="playerFirstName"
+          name="playerFirstName"
+          label="Player First Name"
+          value={formState.playerFirstName}
+          onChange={(event) => updateField("playerFirstName", event.target.value)}
+          placeholder="Enter player first name"
           required
-          error={errors.playerName}
+          error={errors.playerFirstName}
         />
         <FormField
+          id="playerLastName"
+          name="playerLastName"
+          label="Player Last Name"
+          value={formState.playerLastName}
+          onChange={(event) => updateField("playerLastName", event.target.value)}
+          placeholder="Enter player last name"
+          required
+          error={errors.playerLastName}
+        />
+      </div>
+
+      <div className="grid gap-5 md:grid-cols-2">
+        <FormField
           id="parentName"
+          name="parentName"
           label="Parent Or Guardian Name"
           value={formState.parentName}
           onChange={(event) => updateField("parentName", event.target.value)}
@@ -168,11 +208,9 @@ export function TryoutRegistrationForm({
           required
           error={errors.parentName}
         />
-      </div>
-
-      <div className="grid gap-5 md:grid-cols-2">
         <FormField
           id="parentEmail"
+          name="parentEmail"
           label="Parent Email"
           value={formState.parentEmail}
           onChange={(event) => updateField("parentEmail", event.target.value)}
@@ -183,6 +221,7 @@ export function TryoutRegistrationForm({
         />
         <FormField
           id="parentPhone"
+          name="parentPhone"
           label="Parent Phone"
           value={formState.parentPhone}
           onChange={(event) => updateField("parentPhone", event.target.value)}
@@ -195,31 +234,36 @@ export function TryoutRegistrationForm({
 
       <FormField
         id="notes"
+        name="notes"
         label="Player Notes"
         value={formState.notes}
         onChange={(event) => updateField("notes", event.target.value)}
         fieldType="textarea"
         placeholder="Share current team, experience level, or anything the club should know."
-        helperText="Optional notes can later be stored as registration metadata."
+        helperText="Optional notes are stored with the Supabase registration record."
       />
 
-      {submitState === "success" ? (
+      {actionState.status === "success" ? (
         <div className="rounded-[1.4rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200">
-          Registration placeholder submitted successfully. This form is ready to connect to Supabase or an API route next.
+          {actionState.message}
         </div>
       ) : null}
 
-      {submitState === "error" && Object.keys(errors).length > 0 ? (
+      {Object.keys(errors).length > 0 ? (
         <div className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
           Please fix the required fields before submitting.
         </div>
       ) : null}
 
+      {actionState.status === "error" && actionState.message ? (
+        <div className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+          {actionState.message}
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap items-center gap-3 pt-1">
-        <Button type="submit" size="lg" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit Registration"}
-        </Button>
-        <p className="text-sm text-slate-400">Front-end only for now. No data is being saved yet.</p>
+        <SubmitButton isPending={isPending} />
+        <p className="text-sm text-slate-400">Registrations now submit directly into the club&apos;s Supabase table.</p>
       </div>
     </form>
   );

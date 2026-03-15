@@ -9,6 +9,7 @@ type FormFieldOption = {
 
 type FormFieldProps = {
   id: string;
+  name?: string;
   label: string;
   value: string;
   onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
@@ -27,6 +28,7 @@ const baseClasses =
 
 export function FormField({
   id,
+  name,
   label,
   value,
   onChange,
@@ -56,6 +58,7 @@ export function FormField({
       {fieldType === "textarea" ? (
         <textarea
           id={id}
+          name={name ?? id}
           value={value}
           onChange={onChange}
           placeholder={placeholder}
@@ -69,6 +72,7 @@ export function FormField({
       {fieldType === "select" ? (
         <select
           id={id}
+          name={name ?? id}
           value={value}
           onChange={onChange}
           className={fieldClasses}
@@ -87,6 +91,7 @@ export function FormField({
       {fieldType === "input" ? (
         <input
           id={id}
+          name={name ?? id}
           type={type}
           value={value}
           onChange={onChange}

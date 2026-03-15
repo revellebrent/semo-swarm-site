@@ -70,6 +70,25 @@ export type Database = {
           created_at: string;
           updated_at: string;
         };
+        Insert: {
+          id?: string;
+          tryout_id: string;
+          player_first_name: string;
+          player_last_name: string;
+          birth_year: number;
+          current_club?: string | null;
+          parent_name: string;
+          parent_email: string;
+          parent_phone?: string | null;
+          notes?: string | null;
+          status?: "new" | "reviewing" | "accepted" | "waitlisted" | "declined";
+          assigned_team_id?: string | null;
+          assigned_coach_id?: string | null;
+          reviewed_by_profile_id?: string | null;
+          reviewed_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
       };
       profile_roles: {
         Row: {
