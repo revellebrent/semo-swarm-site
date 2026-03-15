@@ -206,7 +206,7 @@ function withAnnouncementLinks(announcements: Announcement[], teams: Team[]) {
 }
 
 export async function getPublicAnnouncements() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const rows = await safeSelect(
     supabase
       .from("announcements")
@@ -221,7 +221,7 @@ export async function getPublicAnnouncements() {
 }
 
 export async function getPublicSponsors() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const rows = await safeSelect(
     supabase
       .from("sponsors")
@@ -237,7 +237,7 @@ export async function getPublicSponsors() {
 }
 
 export async function getPublicTryouts() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
   const rows = await safeSelect(
     supabase
       .from("tryouts")
@@ -252,7 +252,7 @@ export async function getPublicTryouts() {
 }
 
 export async function getPublicTeams() {
-  const supabase = createServerSupabaseClient();
+  const supabase = await createServerSupabaseClient();
 
   const [teamRows, coachRows, assignmentRows, announcementRows, tryoutRows] = await Promise.all([
     safeSelect(
