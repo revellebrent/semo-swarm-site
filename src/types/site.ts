@@ -1,3 +1,19 @@
+import type {
+  AnnouncementModel,
+  CoachModel,
+  RoleKey,
+  RoleModel,
+  SponsorInquiryModel,
+  SponsorModel,
+  TeamPracticeDetails,
+  TeamScheduleItem,
+  TeamTryoutCallout,
+  TeamViewModel,
+  TryoutModel,
+  TryoutRegistrationModel,
+  UserModel,
+} from "@/types/models";
+
 export type NavItem = {
   href: string;
   label: string;
@@ -23,83 +39,19 @@ export type HeroContent = {
   align?: "left" | "center";
 };
 
-export type TeamSummary = {
-  slug: string;
-  name: string;
-  ageGroup: string;
-  level: string;
-  gender: "Girls" | "Boys" | "Coed";
-  focus: string;
-  summary: string;
-  homeBase: string;
-};
-
-export type TeamCoach = {
-  id: string;
-  name: string;
-  role: string;
-  specialty: string;
-  bio: string;
-  license: string;
-  email?: string;
-};
-
-export type TeamAnnouncement = {
-  id: string;
-  title: string;
-  date: string;
-  category: string;
-  summary: string;
-};
-
-export type TeamPracticeDetails = {
-  days: string[];
-  time: string;
-  location: string;
-  season: string;
-  notes: string;
-};
-
-export type TeamScheduleItem = {
-  id: string;
-  opponent: string;
-  date: string;
-  location: string;
-  type: string;
-};
-
-export type TeamTryoutCallout = {
-  title: string;
-  description: string;
-  href: string;
-  ctaLabel: string;
-};
-
-export type Team = TeamSummary & {
-  overview: string;
-  playerProfile: string;
-  coaches: TeamCoach[];
-  practice: TeamPracticeDetails;
-  schedule: TeamScheduleItem[];
-  announcements: TeamAnnouncement[];
-  tryoutCallout?: TeamTryoutCallout;
-  homeBase: string;
-  seasonGoals: string[];
-};
-
-export type CoachProfile = {
-  name: string;
-  role: string;
-  specialty: string;
-  bio: string;
-  license: string;
-};
-
-export type Sponsor = {
-  name: string;
-  category: string;
-  description: string;
-};
+export type Team = TeamViewModel;
+export type TeamSummary = Pick<Team, "slug" | "name" | "ageGroup" | "level" | "gender" | "focus" | "summary" | "homeBase">;
+export type TeamCoach = CoachModel;
+export type TeamAnnouncement = AnnouncementModel;
+export type CoachProfile = CoachModel;
+export type Sponsor = SponsorModel;
+export type User = UserModel;
+export type Role = RoleModel;
+export type RoleId = RoleKey;
+export type Tryout = TryoutModel;
+export type SponsorInquiry = SponsorInquiryModel;
+export type TryoutRegistration = TryoutRegistrationModel;
+export type { TeamPracticeDetails, TeamScheduleItem, TeamTryoutCallout };
 
 export type QuickLink = {
   href: string;
@@ -108,13 +60,7 @@ export type QuickLink = {
   accent: string;
 };
 
-export type Announcement = {
-  title: string;
-  date: string;
-  category: string;
-  summary: string;
-  href: string;
-};
+export type Announcement = AnnouncementModel;
 
 export type FamilyValue = {
   title: string;

@@ -1,12 +1,6 @@
-import type {
-  Announcement,
-  CoachProfile,
-  FamilyValue,
-  HeroContent,
-  NavItem,
-  QuickLink,
-  Sponsor,
-} from "@/types/site";
+import { coaches } from "@/data/club-management";
+import { currentSponsors } from "@/data/sponsors";
+import type { Announcement, FamilyValue, HeroContent, NavItem, QuickLink } from "@/types/site";
 
 export const siteConfig = {
   name: "Semo Swarm Soccer Club",
@@ -60,53 +54,8 @@ export const clubPillars = [
   },
 ];
 
-export const coaches: CoachProfile[] = [
-  {
-    name: "Mason Carter",
-    role: "Club Technical Director",
-    specialty: "Positional play and player development planning",
-    bio:
-      "Mason leads the club game model and supports every age group with session design, individual growth targets, and coach mentoring.",
-    license: "USSF B License",
-  },
-  {
-    name: "Elena Brooks",
-    role: "Girls Premier Head Coach",
-    specialty: "Attacking patterns and competitive mentality",
-    bio:
-      "Elena brings a demanding but player-centered approach that helps teams attack with confidence and defend with urgency.",
-    license: "United Soccer Coaches Premier Diploma",
-  },
-  {
-    name: "Jordan Ellis",
-    role: "Boys Premier Head Coach",
-    specialty: "Pressing structure and transition play",
-    bio:
-      "Jordan emphasizes fast reactions, smart spacing, and repeatable team habits that translate directly into matchday performance.",
-    license: "USSF C License",
-  },
-];
-
-export const sponsors: Sponsor[] = [
-  {
-    name: "Mercy Sports Medicine",
-    category: "Performance Partner",
-    description:
-      "Supporting player wellness, recovery education, and injury prevention resources for Swarm families.",
-  },
-  {
-    name: "Riverfront Bank",
-    category: "Community Sponsor",
-    description:
-      "Investing in local youth opportunities and helping make regional travel and competition more accessible.",
-  },
-  {
-    name: "Cape Athletic Supply",
-    category: "Club Gear Partner",
-    description:
-      "Equipping the club with training apparel, sideline essentials, and custom supporter merchandise.",
-  },
-];
+export { coaches };
+export { currentSponsors as sponsors };
 
 export const homeQuickLinks: QuickLink[] = [
   {
@@ -137,28 +86,46 @@ export const homeQuickLinks: QuickLink[] = [
 
 export const homeAnnouncements: Announcement[] = [
   {
+    id: "announcement-club-tryout-open",
+    createdAt: "2026-04-20",
+    updatedAt: "2026-04-20",
     title: "Spring tryout registration opens for U10-U15 players",
     date: "April 28",
     category: "Club News",
     summary:
       "Families can now submit interest for spring evaluations, with age-group placement details shared after registration.",
     href: "/tryouts",
+    scope: "club",
+    authorUserId: "user-mason-carter",
+    published: true,
   },
   {
+    id: "announcement-club-finishing-labs",
+    createdAt: "2026-05-01",
+    updatedAt: "2026-05-01",
     title: "Swarm technical staff launches weekly finishing labs",
     date: "May 6",
     category: "Player Development",
     summary:
       "New supplemental sessions will focus on first touch in the box, decision speed, and repeatable attacking habits.",
     href: "/coaches",
+    scope: "club",
+    authorUserId: "user-mason-carter",
+    published: true,
   },
   {
+    id: "announcement-club-sponsor-weekend",
+    createdAt: "2026-05-10",
+    updatedAt: "2026-05-10",
     title: "Community sponsor weekend planned for opening home fixtures",
     date: "May 18",
     category: "Events",
     summary:
       "The club will spotlight local partners and create a stronger matchday atmosphere for players and families.",
     href: "/sponsors",
+    scope: "club",
+    authorUserId: "user-revel-owner",
+    published: true,
   },
 ];
 
