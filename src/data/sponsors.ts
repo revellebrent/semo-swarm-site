@@ -1,5 +1,4 @@
-import { sponsorInquiries } from "@/data/club-management";
-import type { Sponsor, SponsorBenefit, SponsorInquiry, SponsorInquiryField, SponsorTier } from "@/types/site";
+import type { SponsorBenefit, SponsorInquiryField, SponsorTier } from "@/types/site";
 
 export const sponsorIntro = {
   eyebrow: "Why Sponsor Swarm",
@@ -7,48 +6,6 @@ export const sponsorIntro = {
   description:
     "Semo Swarm is building a premium youth soccer environment in Southeast Missouri, and strong community partnerships help elevate everything from training gear and travel support to matchday atmosphere and family experience.",
 };
-
-export const currentSponsors: Sponsor[] = [
-  {
-    id: "sponsor-mercy-sports-medicine",
-    createdAt: "2026-01-20",
-    updatedAt: "2026-03-14",
-    name: "Mercy Sports Medicine",
-    category: "Performance Partner",
-    description:
-      "Supporting player wellness, recovery education, and injury prevention resources for Swarm families.",
-    website: "https://example.com/mercy-sports-medicine",
-    active: true,
-    tierId: "title-partner",
-    contactName: "Morgan Hale",
-  },
-  {
-    id: "sponsor-riverfront-bank",
-    createdAt: "2026-01-22",
-    updatedAt: "2026-03-14",
-    name: "Riverfront Bank",
-    category: "Community Sponsor",
-    description:
-      "Investing in local youth opportunities and helping make regional travel and competition more accessible.",
-    website: "https://example.com/riverfront-bank",
-    active: true,
-    tierId: "community-partner",
-    contactName: "Abigail Ross",
-  },
-  {
-    id: "sponsor-cape-athletic-supply",
-    createdAt: "2026-01-25",
-    updatedAt: "2026-03-14",
-    name: "Cape Athletic Supply",
-    category: "Club Gear Partner",
-    description:
-      "Equipping the club with training apparel, sideline essentials, and custom supporter merchandise.",
-    website: "https://example.com/cape-athletic-supply",
-    active: true,
-    tierId: "team-partner",
-    contactName: "Drew Morgan",
-  },
-];
 
 export const sponsorTiers: SponsorTier[] = [
   {
@@ -143,5 +100,3 @@ export const sponsorInquiryFields: SponsorInquiryField[] = [
     placeholder: "Share goals, budget range, or questions about partnering with Semo Swarm",
   },
 ];
-
-export const sponsorInquiryRecords: SponsorInquiry[] = sponsorInquiries;

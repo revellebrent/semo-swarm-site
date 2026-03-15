@@ -17,7 +17,7 @@ type TeamDetailsPageProps = {
 
 export async function generateMetadata({ params }: TeamDetailsPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const team = getTeamBySlug(slug);
+  const team = await getTeamBySlug(slug);
 
   if (!team) {
     return buildPageMetadata({
@@ -35,14 +35,16 @@ export async function generateMetadata({ params }: TeamDetailsPageProps): Promis
 }
 
 export async function generateStaticParams() {
-  return getAllTeams().map((team) => ({
+  const teams = await getAllTeams();
+
+  return teams.map((team) => ({
     slug: team.slug,
   }));
 }
 
 export default async function TeamDetailsPage({ params }: TeamDetailsPageProps) {
   const { slug } = await params;
-  const team = getTeamBySlug(slug);
+  const team = await getTeamBySlug(slug);
 
   if (!team) {
     notFound();
@@ -86,11 +88,17 @@ export default async function TeamDetailsPage({ params }: TeamDetailsPageProps) 
 
           <article className="rounded-3xl border border-amber-300/20 bg-[linear-gradient(180deg,_rgba(245,158,11,0.12),_rgba(255,255,255,0.03))] p-7">
             <p className="text-sm uppercase tracking-[0.2em] text-amber-200">Season Development Goals</p>
-            <ul className="mt-5 grid gap-4 text-sm leading-7 text-slate-200">
-              {team.seasonGoals.map((goal) => (
-                <li key={goal}>{goal}</li>
-              ))}
-            </ul>
+            {team.seasonGoals.length > 0 ? (
+              <ul className="mt-5 grid gap-4 text-sm leading-7 text-slate-200">
+                {team.seasonGoals.map((goal) => (
+                  <li key={goal}>{goal}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-5 text-sm leading-7 text-slate-200">
+                Team development goals will be added soon.
+              </p>
+            )}
           </article>
         </div>
 
@@ -101,20 +109,32 @@ export default async function TeamDetailsPage({ params }: TeamDetailsPageProps) 
                 <h2 className="text-2xl font-semibold text-white">Coach Info</h2>
                 <p className="text-sm text-slate-400">{team.coaches.length} staff members</p>
               </div>
-              <div className="mt-6 grid gap-5">
-                {team.coaches.map((coach) => (
-                  <TeamCoachCard key={coach.id} coach={coach} />
-                ))}
-              </div>
+              {team.coaches.length > 0 ? (
+                <div className="mt-6 grid gap-5">
+                  {team.coaches.map((coach) => (
+                    <TeamCoachCard key={coach.id} coach={coach} />
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-6 text-sm leading-7 text-slate-400">
+                  Coach assignments will appear here once they are added.
+                </p>
+              )}
             </section>
 
             <section className="rounded-3xl border border-white/10 bg-white/5 p-7">
               <h2 className="text-2xl font-semibold text-white">Announcements</h2>
-              <div className="mt-6 grid gap-5">
-                {team.announcements.map((announcement) => (
-                  <TeamAnnouncementCard key={announcement.id} announcement={announcement} />
-                ))}
-              </div>
+              {team.announcements.length > 0 ? (
+                <div className="mt-6 grid gap-5">
+                  {team.announcements.map((announcement) => (
+                    <TeamAnnouncementCard key={announcement.id} announcement={announcement} />
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-6 text-sm leading-7 text-slate-400">
+                  No team announcements are published yet.
+                </p>
+              )}
             </section>
           </div>
 
@@ -124,7 +144,9 @@ export default async function TeamDetailsPage({ params }: TeamDetailsPageProps) 
               <dl className="mt-6 grid gap-5 text-sm">
                 <div>
                   <dt className="font-semibold text-white">Practice Days</dt>
-                  <dd className="mt-1 leading-7 text-slate-300">{team.practice.days.join(", ")}</dd>
+                  <dd className="mt-1 leading-7 text-slate-300">
+                    {team.practice.days.length > 0 ? team.practice.days.join(", ") : "To be announced"}
+                  </dd>
                 </div>
                 <div>
                   <dt className="font-semibold text-white">Time</dt>
@@ -147,20 +169,26 @@ export default async function TeamDetailsPage({ params }: TeamDetailsPageProps) 
 
             <section className="rounded-3xl border border-white/10 bg-slate-950/70 p-7">
               <h2 className="text-2xl font-semibold text-white">Schedule Placeholder</h2>
-              <div className="mt-6 grid gap-4">
-                {team.schedule.map((item) => (
-                  <article key={item.id} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <h3 className="text-base font-semibold text-white">vs {item.opponent}</h3>
-                      <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">
-                        {item.type}
-                      </span>
-                    </div>
-                    <p className="mt-3 text-sm text-slate-300">{item.date}</p>
-                    <p className="mt-1 text-sm text-slate-400">{item.location}</p>
-                  </article>
-                ))}
-              </div>
+              {team.schedule.length > 0 ? (
+                <div className="mt-6 grid gap-4">
+                  {team.schedule.map((item) => (
+                    <article key={item.id} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                      <div className="flex items-center justify-between gap-4">
+                        <h3 className="text-base font-semibold text-white">vs {item.opponent}</h3>
+                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">
+                          {item.type}
+                        </span>
+                      </div>
+                      <p className="mt-3 text-sm text-slate-300">{item.date}</p>
+                      <p className="mt-1 text-sm text-slate-400">{item.location}</p>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="mt-6 text-sm leading-7 text-slate-400">
+                  Schedule data has not been connected yet. Match listings will appear here once available.
+                </p>
+              )}
             </section>
 
             {team.tryoutCallout ? (

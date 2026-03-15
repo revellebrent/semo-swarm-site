@@ -1,6 +1,5 @@
 import { coaches } from "@/data/club-management";
-import { currentSponsors } from "@/data/sponsors";
-import type { Announcement, FamilyValue, HeroContent, NavItem, QuickLink } from "@/types/site";
+import type { FamilyValue, HeroContent, NavItem, QuickLink } from "@/types/site";
 
 export const siteConfig = {
   name: "Semo Swarm Soccer Club",
@@ -56,7 +55,6 @@ export const clubPillars = [
 ];
 
 export { coaches };
-export { currentSponsors as sponsors };
 
 export const homeQuickLinks: QuickLink[] = [
   {
@@ -82,51 +80,6 @@ export const homeQuickLinks: QuickLink[] = [
     label: "Contact",
     description: "Start a conversation about teams, training, or partnership opportunities.",
     accent: "Club Contact",
-  },
-];
-
-export const homeAnnouncements: Announcement[] = [
-  {
-    id: "announcement-club-tryout-open",
-    createdAt: "2026-04-20",
-    updatedAt: "2026-04-20",
-    title: "Spring tryout registration opens for U10-U15 players",
-    date: "April 28",
-    category: "Club News",
-    summary:
-      "Families can now submit interest for spring evaluations, with age-group placement details shared after registration.",
-    href: "/tryouts",
-    scope: "club",
-    authorUserId: "user-mason-carter",
-    published: true,
-  },
-  {
-    id: "announcement-club-finishing-labs",
-    createdAt: "2026-05-01",
-    updatedAt: "2026-05-01",
-    title: "Swarm technical staff launches weekly finishing labs",
-    date: "May 6",
-    category: "Player Development",
-    summary:
-      "New supplemental sessions will focus on first touch in the box, decision speed, and repeatable attacking habits.",
-    href: "/coaches",
-    scope: "club",
-    authorUserId: "user-mason-carter",
-    published: true,
-  },
-  {
-    id: "announcement-club-sponsor-weekend",
-    createdAt: "2026-05-10",
-    updatedAt: "2026-05-10",
-    title: "Community sponsor weekend planned for opening home fixtures",
-    date: "May 18",
-    category: "Events",
-    summary:
-      "The club will spotlight local partners and create a stronger matchday atmosphere for players and families.",
-    href: "/sponsors",
-    scope: "club",
-    authorUserId: "user-revel-owner",
-    published: true,
   },
 ];
 

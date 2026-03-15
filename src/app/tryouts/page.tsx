@@ -8,13 +8,8 @@ import { TryoutRegistrationForm } from "@/components/tryouts/tryout-registration
 import { CtaPanel } from "@/components/ui/cta-panel";
 import { PageHero } from "@/components/ui/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
-import {
-  clubWideTryoutPrograms,
-  currentTryoutOverview,
-  independentCoachTryouts,
-  tryoutFaqs,
-  tryoutRegistrationCards,
-} from "@/data/tryouts";
+import { getPublicTryouts } from "@/data/public-content";
+import { currentTryoutOverview, splitTryouts, tryoutFaqs, tryoutRegistrationCards } from "@/data/tryouts";
 import { siteConfig } from "@/data/site";
 import { buildPageMetadata } from "@/lib/metadata";
 
@@ -25,7 +20,10 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/tryouts",
 });
 
-export default function TryoutsPage() {
+export default async function TryoutsPage() {
+  const tryouts = await getPublicTryouts();
+  const { clubWideTryoutPrograms, independentCoachTryouts } = splitTryouts(tryouts);
+
   return (
     <>
       <PageHero
@@ -86,14 +84,20 @@ export default function TryoutsPage() {
         <SectionHeading
           eyebrow="Age Groups And Programs"
           title="Program listings built for clean editing and future registration integration."
-          description="Each listing is driven by mock data today so a real registration form, database table, or admin-managed schedule can replace it later without rebuilding the page."
+          description="Each listing is driven by live Supabase data where available, while the page continues to render cleanly even when no tryouts have been published yet."
         />
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {clubWideTryoutPrograms.map((program) => (
-            <TryoutProgramCard key={program.id} program={program} />
-          ))}
-        </div>
+        {clubWideTryoutPrograms.length > 0 ? (
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {clubWideTryoutPrograms.map((program) => (
+              <TryoutProgramCard key={program.id} program={program} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-[1.8rem] border border-dashed border-white/15 bg-white/5 p-8 text-sm leading-7 text-slate-400">
+            No public club-wide tryouts are available yet. Add open public tryouts in Supabase and they will appear here automatically.
+          </div>
+        )}
       </SectionWrapper>
 
       <SectionWrapper>
@@ -103,27 +107,33 @@ export default function TryoutsPage() {
           description="Some players are best served by direct coach-led sessions before entering a broader roster conversation. This section is designed to scale into coach-managed registration later."
         />
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-2">
-          {independentCoachTryouts.map((tryout) => (
-            <article key={tryout.id} className="rounded-[1.8rem] border border-white/10 bg-white/5 p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">{tryout.ageFocus}</p>
-              <h3 className="mt-3 text-2xl font-semibold text-white">{tryout.program}</h3>
-              <p className="mt-2 text-sm font-medium text-slate-400">
-                {tryout.coachName} | {tryout.role}
-              </p>
-              <p className="mt-4 text-sm leading-7 text-slate-300">{tryout.summary}</p>
-              <div className="mt-6 flex flex-wrap items-center gap-3">
-                <a
-                  href="#registration-form"
-                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
-                >
-                  Request Coach Session
-                </a>
-                <span className="text-sm text-slate-400">{tryout.contact}</span>
-              </div>
-            </article>
-          ))}
-        </div>
+        {independentCoachTryouts.length > 0 ? (
+          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+            {independentCoachTryouts.map((tryout) => (
+              <article key={tryout.id} className="rounded-[1.8rem] border border-white/10 bg-white/5 p-6">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">{tryout.ageFocus}</p>
+                <h3 className="mt-3 text-2xl font-semibold text-white">{tryout.program}</h3>
+                <p className="mt-2 text-sm font-medium text-slate-400">
+                  {tryout.coachName} | {tryout.role}
+                </p>
+                <p className="mt-4 text-sm leading-7 text-slate-300">{tryout.summary}</p>
+                <div className="mt-6 flex flex-wrap items-center gap-3">
+                  <a
+                    href="#registration-form"
+                    className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                  >
+                    Request Coach Session
+                  </a>
+                  <span className="text-sm text-slate-400">{tryout.contact}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-[1.8rem] border border-dashed border-white/15 bg-white/5 p-8 text-sm leading-7 text-slate-400">
+            No coach-managed tryouts are published yet.
+          </div>
+        )}
       </SectionWrapper>
 
       <SectionWrapper id="registration-form" className="bg-white/[0.03]">
@@ -152,7 +162,10 @@ export default function TryoutsPage() {
             </p>
 
             <div className="mt-8">
-              <TryoutRegistrationForm />
+              <TryoutRegistrationForm
+                clubWideTryoutPrograms={clubWideTryoutPrograms}
+                independentCoachTryouts={independentCoachTryouts}
+              />
             </div>
           </section>
         </div>

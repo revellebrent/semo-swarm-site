@@ -7,12 +7,8 @@ import { SponsorTierCard } from "@/components/sponsors/sponsor-tier-card";
 import { CtaPanel } from "@/components/ui/cta-panel";
 import { PageHero } from "@/components/ui/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
-import {
-  currentSponsors,
-  sponsorBenefits,
-  sponsorIntro,
-  sponsorTiers,
-} from "@/data/sponsors";
+import { getPublicSponsors } from "@/data/public-content";
+import { sponsorBenefits, sponsorIntro, sponsorTiers } from "@/data/sponsors";
 import { siteConfig } from "@/data/site";
 import { buildPageMetadata } from "@/lib/metadata";
 
@@ -23,7 +19,9 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/sponsors",
 });
 
-export default function SponsorsPage() {
+export default async function SponsorsPage() {
+  const currentSponsors = await getPublicSponsors();
+
   return (
     <>
       <PageHero
@@ -73,7 +71,7 @@ export default function SponsorsPage() {
         <SectionHeading
           eyebrow="Sponsor Tiers"
           title="Partnership options built for local businesses of different sizes."
-          description="These tier cards are mock content today, but they are structured so a backend-managed sponsorship package system can replace them later without changing the page layout."
+          description="These tier cards stay editable in code for now, while current sponsor listings can come from live Supabase data."
         />
 
         <div className="mt-10 grid gap-5 lg:grid-cols-3">
@@ -87,14 +85,20 @@ export default function SponsorsPage() {
         <SectionHeading
           eyebrow="Current Sponsors"
           title="Businesses already helping Semo Swarm grow."
-          description="These realistic placeholder partners show how current sponsors can be presented in a more polished editorial style instead of a simple logo wall."
+          description="Active public sponsors are loaded from Supabase and shown here automatically."
         />
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {currentSponsors.map((sponsor) => (
-            <CurrentSponsorCard key={sponsor.name} sponsor={sponsor} />
-          ))}
-        </div>
+        {currentSponsors.length > 0 ? (
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {currentSponsors.map((sponsor) => (
+              <CurrentSponsorCard key={sponsor.id} sponsor={sponsor} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-[1.8rem] border border-dashed border-white/15 bg-white/5 p-8 text-sm leading-7 text-slate-400">
+            No public sponsors are listed yet. Add active sponsor records in Supabase and they will appear here automatically.
+          </div>
+        )}
       </SectionWrapper>
 
       <SectionWrapper className="bg-white/[0.03]">

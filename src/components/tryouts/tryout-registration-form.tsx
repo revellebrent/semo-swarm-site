@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 
 import { FormField } from "@/components/forms/form-field";
 import { Button } from "@/components/ui/button";
-import { clubWideTryoutPrograms, independentCoachTryouts } from "@/data/tryouts";
+import type { IndependentTryout, TryoutProgram } from "@/types/site";
 
 type TryoutRegistrationFormState = {
   tryoutId: string;
@@ -29,7 +29,15 @@ const initialState: TryoutRegistrationFormState = {
   notes: "",
 };
 
-export function TryoutRegistrationForm() {
+type TryoutRegistrationFormProps = {
+  clubWideTryoutPrograms: TryoutProgram[];
+  independentCoachTryouts: IndependentTryout[];
+};
+
+export function TryoutRegistrationForm({
+  clubWideTryoutPrograms,
+  independentCoachTryouts,
+}: TryoutRegistrationFormProps) {
   const [formState, setFormState] = useState<TryoutRegistrationFormState>(initialState);
   const [errors, setErrors] = useState<TryoutRegistrationFormErrors>({});
   const [submitState, setSubmitState] = useState<"idle" | "success" | "error">("idle");
@@ -46,7 +54,7 @@ export function TryoutRegistrationForm() {
         value: program.id,
       })),
     ],
-    [],
+    [clubWideTryoutPrograms, independentCoachTryouts],
   );
 
   function updateField<Key extends keyof TryoutRegistrationFormState>(key: Key, value: string) {

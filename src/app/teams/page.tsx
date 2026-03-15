@@ -14,8 +14,8 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/teams",
 });
 
-export default function TeamsPage() {
-  const teamsByAgeGroup = getTeamsGroupedByAgeGroup();
+export default async function TeamsPage() {
+  const teamsByAgeGroup = await getTeamsGroupedByAgeGroup();
   const ageGroups = Object.keys(teamsByAgeGroup);
 
   return (
@@ -33,33 +33,39 @@ export default function TeamsPage() {
         <SectionHeading
           eyebrow="Current Groups"
           title="Team cards organized by age group and ready for future live data."
-          description="The page is intentionally structured around reusable data and UI so mock content can later be replaced with database-driven roster, coach, and schedule records."
+          description="The page is intentionally structured around reusable data and UI so live Supabase content can populate this area without changing the public design."
         />
 
-        <div className="mt-10 space-y-10">
-          {ageGroups.map((ageGroup) => (
-            <section key={ageGroup} className="space-y-5" aria-labelledby={`age-group-${ageGroup.replace(/\s+/g, "-").toLowerCase()}`}>
-              <div className="flex items-end justify-between gap-4 border-b border-white/10 pb-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Age Group</p>
-                  <h2
-                    id={`age-group-${ageGroup.replace(/\s+/g, "-").toLowerCase()}`}
-                    className="mt-2 text-2xl font-semibold text-white"
-                  >
-                    {ageGroup}
-                  </h2>
+        {ageGroups.length > 0 ? (
+          <div className="mt-10 space-y-10">
+            {ageGroups.map((ageGroup) => (
+              <section key={ageGroup} className="space-y-5" aria-labelledby={`age-group-${ageGroup.replace(/\s+/g, "-").toLowerCase()}`}>
+                <div className="flex items-end justify-between gap-4 border-b border-white/10 pb-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Age Group</p>
+                    <h2
+                      id={`age-group-${ageGroup.replace(/\s+/g, "-").toLowerCase()}`}
+                      className="mt-2 text-2xl font-semibold text-white"
+                    >
+                      {ageGroup}
+                    </h2>
+                  </div>
+                  <p className="text-sm text-slate-400">{teamsByAgeGroup[ageGroup].length} active team listing</p>
                 </div>
-                <p className="text-sm text-slate-400">{teamsByAgeGroup[ageGroup].length} active team listing</p>
-              </div>
 
-              <div className="grid gap-5 lg:grid-cols-2">
-                {teamsByAgeGroup[ageGroup].map((team) => (
-                  <TeamCard key={team.slug} team={team} />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
+                <div className="grid gap-5 lg:grid-cols-2">
+                  {teamsByAgeGroup[ageGroup].map((team) => (
+                    <TeamCard key={team.slug} team={team} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-[1.8rem] border border-dashed border-white/15 bg-white/5 p-8 text-sm leading-7 text-slate-400">
+            No teams are available yet. This page will populate automatically once team records are added in Supabase.
+          </div>
+        )}
       </SectionWrapper>
     </>
   );

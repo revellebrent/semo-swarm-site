@@ -10,7 +10,7 @@ import { TeamCard } from "@/components/teams/team-card";
 import { Button } from "@/components/ui/button";
 import { CtaPanel } from "@/components/ui/cta-panel";
 import { SectionHeading } from "@/components/ui/section-heading";
-import { getAllTeams } from "@/data/teams";
+import { getHomepageData } from "@/data/public-content";
 import { clubPillars } from "@/data/site";
 import { buildPageMetadata } from "@/lib/metadata";
 
@@ -20,8 +20,8 @@ export const metadata: Metadata = buildPageMetadata({
   path: "/",
 });
 
-export default function HomePage() {
-  const featuredTeams = getAllTeams();
+export default async function HomePage() {
+  const { featuredTeams, announcements, sponsors } = await getHomepageData();
 
   return (
     <>
@@ -50,7 +50,7 @@ export default function HomePage() {
       </SectionWrapper>
 
       <SectionWrapper className="pt-0">
-        <SponsorStrip />
+        <SponsorStrip sponsors={sponsors} />
       </SectionWrapper>
 
       <SectionWrapper className="bg-white/[0.03]">
@@ -60,7 +60,7 @@ export default function HomePage() {
           description="The homepage is set up for easy content edits now, and it can later connect to a CMS, database, or admin workflow without redesigning the section."
         />
         <div className="mt-10">
-          <AnnouncementList />
+          <AnnouncementList announcements={announcements} />
         </div>
       </SectionWrapper>
 
@@ -76,11 +76,17 @@ export default function HomePage() {
           </Button>
         </div>
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {featuredTeams.map((team) => (
-            <TeamCard key={team.slug} team={team} />
-          ))}
-        </div>
+        {featuredTeams.length > 0 ? (
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {featuredTeams.map((team) => (
+              <TeamCard key={team.slug} team={team} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-10 rounded-[1.8rem] border border-dashed border-white/15 bg-white/5 p-8 text-sm leading-7 text-slate-400">
+            No teams are published yet. Team cards will appear here once they are available in Supabase.
+          </div>
+        )}
       </SectionWrapper>
 
       <SectionWrapper className="bg-white/[0.03]">
