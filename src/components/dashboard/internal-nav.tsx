@@ -24,6 +24,12 @@ const navItems: InternalNavItem[] = [
     allowedRoles: ["super_admin", "club_admin", "coach"],
   },
   {
+    href: "/coach",
+    label: "Coach View",
+    description: "Assigned teams and coach workflows.",
+    allowedRoles: ["coach"],
+  },
+  {
     href: "/dashboard#teams",
     label: "Teams",
     description: "Team records and assignments.",
@@ -66,7 +72,7 @@ export function InternalNav({ roleKeys }: InternalNavProps) {
     <nav aria-label="Internal dashboard navigation">
       <div className="grid gap-2">
         {navItems.map((item) => {
-          const isActive = item.href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith("/dashboard");
+          const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
           const hasAccess = canAccessNavItem(item, roleKeys);
 
           return (

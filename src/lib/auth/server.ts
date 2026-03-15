@@ -84,3 +84,13 @@ export async function requireInternalUser(nextPath = "/dashboard") {
 
   return authContext;
 }
+
+export async function requireCoachUser(nextPath = "/coach") {
+  const authContext = await requireInternalUser(nextPath);
+
+  if (!authContext.roleKeys.includes("coach")) {
+    redirect("/dashboard");
+  }
+
+  return authContext;
+}
