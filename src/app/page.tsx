@@ -1,14 +1,24 @@
+import type { Metadata } from "next";
+
 import { AnnouncementList } from "@/components/home/announcement-list";
 import { FamilyValuesGrid } from "@/components/home/family-values-grid";
 import { HomeHero } from "@/components/home/home-hero";
 import { QuickLinksGrid } from "@/components/home/quick-links-grid";
 import { SponsorStrip } from "@/components/home/sponsor-strip";
 import { SectionWrapper } from "@/components/layout/section-wrapper";
-import { Button } from "@/components/ui/button";
-import { SectionHeading } from "@/components/ui/section-heading";
 import { TeamCard } from "@/components/teams/team-card";
+import { Button } from "@/components/ui/button";
+import { CtaPanel } from "@/components/ui/cta-panel";
+import { SectionHeading } from "@/components/ui/section-heading";
 import { getAllTeams } from "@/data/teams";
 import { clubPillars } from "@/data/site";
+import { buildPageMetadata } from "@/lib/metadata";
+
+export const metadata: Metadata = buildPageMetadata({
+  description:
+    "Semo Swarm is a premium youth soccer club in Southeast Missouri offering elite training, competitive teams, tryouts, and a modern family experience.",
+  path: "/",
+});
 
 export default function HomePage() {
   const featuredTeams = getAllTeams();
@@ -85,23 +95,15 @@ export default function HomePage() {
       </SectionWrapper>
 
       <SectionWrapper>
-        <div className="rounded-[2rem] border border-amber-300/20 bg-[linear-gradient(135deg,_rgba(245,158,11,0.18),_rgba(255,255,255,0.03))] p-8 sm:p-10 lg:flex lg:items-center lg:justify-between">
-          <div className="max-w-2xl space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-200">Final CTA</p>
-            <h2 className="text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
-              Ready to find the right team, tryout, or next conversation?
-            </h2>
-            <p className="text-base leading-8 text-slate-200">
-              Start with the path that fits best today, and the site structure is ready to grow with future registrations, announcements, and club operations.
-            </p>
-          </div>
-          <div className="mt-6 flex flex-wrap gap-3 lg:mt-0">
-            <Button href="/tryouts">Reserve a Tryout Spot</Button>
-            <Button href="/contact" variant="secondary">
-              Contact The Club
-            </Button>
-          </div>
-        </div>
+        <CtaPanel
+          eyebrow="Next Step"
+          title="Ready to find the right team, tryout, or next conversation?"
+          description="Start with the path that fits best today, and the site structure is ready to grow with future registrations, announcements, and club operations."
+          actions={[
+            { href: "/tryouts", label: "Start Registration" },
+            { href: "/contact", label: "Contact The Club", variant: "secondary" },
+          ]}
+        />
       </SectionWrapper>
     </>
   );

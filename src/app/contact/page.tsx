@@ -7,10 +7,14 @@ import { PageHero } from "@/components/ui/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { contactBlocks, contactQuickAnswers, generalInquiryFields } from "@/data/contact";
 import { siteConfig } from "@/data/site";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Contact",
-};
+  description:
+    "Contact Semo Swarm for team questions, tryout information, sponsorship inquiries, and general club support across Southeast Missouri.",
+  path: "/contact",
+});
 
 export default function ContactPage() {
   return (
@@ -55,7 +59,7 @@ export default function ContactPage() {
             </div>
           </article>
 
-          <article
+          <section
             id="inquiry-form"
             className="rounded-[2rem] border border-white/10 bg-slate-950/70 p-7 sm:p-8"
           >
@@ -76,7 +80,7 @@ export default function ContactPage() {
             <div className="mt-6">
               <Button href="/contact">Submit Placeholder</Button>
             </div>
-          </article>
+          </section>
         </div>
       </SectionWrapper>
 
@@ -100,7 +104,7 @@ export default function ContactPage() {
 
       <SectionWrapper>
         <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-          <article className="rounded-[2rem] border border-white/10 bg-white/5 p-7 sm:p-8">
+          <section className="rounded-[2rem] border border-white/10 bg-white/5 p-7 sm:p-8">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-300">Map / Location</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
               Placeholder map area for future embed or directions module.
@@ -110,9 +114,9 @@ export default function ContactPage() {
               <br />
               Cape Girardeau region training and club activity locations can be connected here later.
             </div>
-          </article>
+          </section>
 
-          <article className="rounded-[2rem] border border-amber-300/20 bg-[linear-gradient(135deg,_rgba(245,158,11,0.18),_rgba(255,255,255,0.03))] p-7 sm:p-8">
+          <section className="rounded-[2rem] border border-amber-300/20 bg-[linear-gradient(135deg,_rgba(245,158,11,0.18),_rgba(255,255,255,0.03))] p-7 sm:p-8">
             <SectionHeading
               eyebrow="Quick Answers"
               title="A few fast answers before you reach out."
@@ -127,7 +131,7 @@ export default function ContactPage() {
                 </article>
               ))}
             </div>
-          </article>
+          </section>
         </div>
       </SectionWrapper>
     </>

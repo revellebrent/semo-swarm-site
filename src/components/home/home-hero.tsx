@@ -3,9 +3,9 @@ import { homeHero } from "@/data/site";
 
 export function HomeHero() {
   return (
-    <section className="relative overflow-hidden border-b border-white/10 px-5 pb-12 pt-16 sm:px-6 sm:pb-16 sm:pt-20 lg:px-8 lg:pb-20 lg:pt-24">
-      <div className="absolute inset-0 -z-20 bg-[linear-gradient(135deg,_#08101d_0%,_#0e1830_42%,_#070b14_100%)]" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-[32rem] bg-[radial-gradient(circle_at_15%_20%,_rgba(245,158,11,0.22),_transparent_25%),radial-gradient(circle_at_85%_10%,_rgba(59,130,246,0.18),_transparent_26%)]" />
+    <header className="relative overflow-hidden border-b border-white/10 px-5 pb-12 pt-16 sm:px-6 sm:pb-16 sm:pt-20 lg:px-8 lg:pb-20 lg:pt-24">
+      <div aria-hidden="true" className="absolute inset-0 -z-20 bg-[linear-gradient(135deg,_#08101d_0%,_#0e1830_42%,_#070b14_100%)]" />
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 -z-10 h-[32rem] bg-[radial-gradient(circle_at_15%_20%,_rgba(245,158,11,0.22),_transparent_25%),radial-gradient(circle_at_85%_10%,_rgba(59,130,246,0.18),_transparent_26%)]" />
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
         <div className="max-w-4xl">
           <p className="text-xs font-semibold uppercase tracking-[0.42em] text-amber-300">{homeHero.eyebrow}</p>
@@ -71,6 +71,6 @@ export function HomeHero() {
           </div>
         </div>
       </div>
-    </section>
+    </header>
   );
 }

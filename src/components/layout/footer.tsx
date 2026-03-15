@@ -22,7 +22,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div>
+        <nav aria-label="Footer navigation">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">Site Map</p>
           <div className="mt-4 grid gap-3">
             {navigationItems.map((item) => (
@@ -31,9 +31,9 @@ export function Footer() {
               </Link>
             ))}
           </div>
-        </div>
+        </nav>
 
-        <div>
+        <address className="not-italic">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">Contact</p>
           <div className="mt-4 grid gap-3 text-sm text-slate-400">
             <p>{siteConfig.location}</p>
@@ -44,7 +44,7 @@ export function Footer() {
               {siteConfig.phone}
             </a>
           </div>
-        </div>
+        </address>
       </div>
       <div className="border-t border-white/10 px-5 py-4 text-center text-xs uppercase tracking-[0.2em] text-slate-500 sm:px-6 lg:px-8">
         {siteConfig.shortName} | Southeast Missouri Youth Soccer Club

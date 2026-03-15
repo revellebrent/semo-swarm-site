@@ -10,7 +10,7 @@ export function PageHero({ content }: PageHeroProps) {
   const isCentered = content.align === "center";
 
   return (
-    <section className="overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_top,_rgba(245,158,11,0.22),_transparent_30%),radial-gradient(circle_at_85%_10%,_rgba(59,130,246,0.14),_transparent_25%),linear-gradient(180deg,_#08101d_0%,_#0b1324_55%,_#070b14_100%)] px-5 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+    <header className="overflow-hidden border-b border-white/10 bg-[radial-gradient(circle_at_top,_rgba(245,158,11,0.22),_transparent_30%),radial-gradient(circle_at_85%_10%,_rgba(59,130,246,0.14),_transparent_25%),linear-gradient(180deg,_#08101d_0%,_#0b1324_55%,_#070b14_100%)] px-5 py-20 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
       <div className={`mx-auto max-w-7xl ${isCentered ? "text-center" : ""}`}>
         <div className={`max-w-4xl space-y-6 ${isCentered ? "mx-auto" : ""}`}>
           <p className="text-xs font-semibold uppercase tracking-[0.4em] text-amber-300">{content.eyebrow}</p>
@@ -42,6 +42,6 @@ export function PageHero({ content }: PageHeroProps) {
           </div>
         ) : null}
       </div>
-    </section>
+    </header>
   );
 }

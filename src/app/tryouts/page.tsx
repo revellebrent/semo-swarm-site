@@ -5,7 +5,7 @@ import { FaqList } from "@/components/tryouts/faq-list";
 import { RegistrationCtaCard } from "@/components/tryouts/registration-cta-card";
 import { TryoutProgramCard } from "@/components/tryouts/tryout-program-card";
 import { TryoutRegistrationForm } from "@/components/tryouts/tryout-registration-form";
-import { Button } from "@/components/ui/button";
+import { CtaPanel } from "@/components/ui/cta-panel";
 import { PageHero } from "@/components/ui/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
 import {
@@ -16,10 +16,14 @@ import {
   tryoutRegistrationCards,
 } from "@/data/tryouts";
 import { siteConfig } from "@/data/site";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Tryouts",
-};
+  description:
+    "View Semo Swarm tryout opportunities, coach-led evaluations, registration details, and answers for families exploring the club pathway.",
+  path: "/tryouts",
+});
 
 export default function TryoutsPage() {
   return (
@@ -109,9 +113,12 @@ export default function TryoutsPage() {
               </p>
               <p className="mt-4 text-sm leading-7 text-slate-300">{tryout.summary}</p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <Button href="#registration-form" variant="secondary">
+                <a
+                  href="#registration-form"
+                  className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                >
                   Request Coach Session
-                </Button>
+                </a>
                 <span className="text-sm text-slate-400">{tryout.contact}</span>
               </div>
             </article>
@@ -135,7 +142,7 @@ export default function TryoutsPage() {
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.03))] p-7 sm:p-8">
+          <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.03))] p-7 sm:p-8">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-300">Tryout Registration Form</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
               Submit a player interest form.
@@ -147,7 +154,7 @@ export default function TryoutsPage() {
             <div className="mt-8">
               <TryoutRegistrationForm />
             </div>
-          </div>
+          </section>
         </div>
       </SectionWrapper>
 
@@ -163,8 +170,8 @@ export default function TryoutsPage() {
       </SectionWrapper>
 
       <SectionWrapper>
-        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7 sm:p-8">
+        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+          <section className="rounded-[2rem] border border-white/10 bg-white/5 p-7 sm:p-8">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-300">Questions</p>
             <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
               Need help finding the right tryout path?
@@ -172,22 +179,17 @@ export default function TryoutsPage() {
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
               Families can contact the club for help with age-group fit, coach-specific sessions, timing, or what to expect during evaluations.
             </p>
-          </div>
+          </section>
 
-          <div className="rounded-[2rem] border border-amber-300/20 bg-[linear-gradient(135deg,_rgba(245,158,11,0.18),_rgba(255,255,255,0.03))] p-7 sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">Contact The Club</p>
-            <div className="mt-5 grid gap-4 text-sm text-slate-200">
-              <p>{siteConfig.email}</p>
-              <p>{siteConfig.phone}</p>
-              <p>{siteConfig.location}</p>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button href="/contact">Contact Semo Swarm</Button>
-              <Button href="/teams" variant="secondary">
-                Explore Teams
-              </Button>
-            </div>
-          </div>
+          <CtaPanel
+            eyebrow="Contact The Club"
+            title="Talk with the staff before registering."
+            description={`${siteConfig.email} | ${siteConfig.phone} | ${siteConfig.location}`}
+            actions={[
+              { href: "/contact", label: "Contact The Club" },
+              { href: "/teams", label: "Explore Teams", variant: "secondary" },
+            ]}
+          />
         </div>
       </SectionWrapper>
     </>

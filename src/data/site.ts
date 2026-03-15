@@ -8,6 +8,7 @@ export const siteConfig = {
   location: "Southeast Missouri",
   email: "hello@semoswarmfc.com",
   phone: "(573) 555-0118",
+  siteUrl: "https://www.semoswarmfc.com",
 };
 
 export const navigationItems: NavItem[] = [

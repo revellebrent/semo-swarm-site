@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { SectionWrapper } from "@/components/layout/section-wrapper";
 import { TeamAnnouncementCard } from "@/components/teams/team-announcement-card";
 import { TeamCoachCard } from "@/components/teams/team-coach-card";
-import { Button } from "@/components/ui/button";
+import { CtaPanel } from "@/components/ui/cta-panel";
 import { PageHero } from "@/components/ui/page-hero";
 import { getAllTeams, getTeamBySlug } from "@/data/teams";
+import { buildPageMetadata } from "@/lib/metadata";
 
 type TeamDetailsPageProps = {
   params: Promise<{
@@ -19,9 +19,19 @@ export async function generateMetadata({ params }: TeamDetailsPageProps): Promis
   const { slug } = await params;
   const team = getTeamBySlug(slug);
 
-  return {
-    title: team ? team.name : "Team Not Found",
-  };
+  if (!team) {
+    return buildPageMetadata({
+      title: "Team Not Found",
+      description: "The requested Semo Swarm team page could not be found.",
+      path: "/teams",
+    });
+  }
+
+  return buildPageMetadata({
+    title: team.name,
+    description: `${team.name} is a ${team.level.toLowerCase()} Semo Swarm squad focused on ${team.focus.toLowerCase()}, with team details, coaches, announcements, and practice information.`,
+    path: `/teams/${team.slug}`,
+  });
 }
 
 export async function generateStaticParams() {
@@ -42,7 +52,7 @@ export default async function TeamDetailsPage({ params }: TeamDetailsPageProps) 
     <>
       <PageHero
         content={{
-          eyebrow: `${team.ageGroup} • ${team.level}`,
+          eyebrow: `${team.ageGroup} | ${team.level}`,
           title: team.name,
           description: team.overview,
           actions: [
@@ -154,17 +164,15 @@ export default async function TeamDetailsPage({ params }: TeamDetailsPageProps) 
             </section>
 
             {team.tryoutCallout ? (
-              <section className="rounded-3xl border border-amber-300/20 bg-[linear-gradient(135deg,_rgba(245,158,11,0.18),_rgba(255,255,255,0.03))] p-7">
-                <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-200">Team Tryout Callout</p>
-                <h2 className="mt-4 text-2xl font-semibold text-white">{team.tryoutCallout.title}</h2>
-                <p className="mt-3 text-sm leading-7 text-slate-200">{team.tryoutCallout.description}</p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Button href={team.tryoutCallout.href}>{team.tryoutCallout.ctaLabel}</Button>
-                  <Link href="/teams" className="inline-flex items-center text-sm font-semibold text-slate-200 hover:text-white">
-                    Browse all teams
-                  </Link>
-                </div>
-              </section>
+              <CtaPanel
+                eyebrow="Team Tryout Callout"
+                title={team.tryoutCallout.title}
+                description={team.tryoutCallout.description}
+                actions={[
+                  { href: team.tryoutCallout.href, label: team.tryoutCallout.ctaLabel },
+                  { href: "/teams", label: "Browse All Teams", variant: "secondary" },
+                ]}
+              />
             ) : null}
           </div>
         </div>

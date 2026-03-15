@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 
-import { TeamCard } from "@/components/teams/team-card";
 import { SectionWrapper } from "@/components/layout/section-wrapper";
+import { TeamCard } from "@/components/teams/team-card";
 import { PageHero } from "@/components/ui/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getTeamsGroupedByAgeGroup } from "@/data/teams";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Teams",
-};
+  description:
+    "Browse Semo Swarm teams by age group and learn about each squad's training focus, practice base, coaches, and development pathway.",
+  path: "/teams",
+});
 
 export default function TeamsPage() {
   const teamsByAgeGroup = getTeamsGroupedByAgeGroup();
@@ -34,11 +38,16 @@ export default function TeamsPage() {
 
         <div className="mt-10 space-y-10">
           {ageGroups.map((ageGroup) => (
-            <section key={ageGroup} className="space-y-5">
+            <section key={ageGroup} className="space-y-5" aria-labelledby={`age-group-${ageGroup.replace(/\s+/g, "-").toLowerCase()}`}>
               <div className="flex items-end justify-between gap-4 border-b border-white/10 pb-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">Age Group</p>
-                  <h2 className="mt-2 text-2xl font-semibold text-white">{ageGroup}</h2>
+                  <h2
+                    id={`age-group-${ageGroup.replace(/\s+/g, "-").toLowerCase()}`}
+                    className="mt-2 text-2xl font-semibold text-white"
+                  >
+                    {ageGroup}
+                  </h2>
                 </div>
                 <p className="text-sm text-slate-400">{teamsByAgeGroup[ageGroup].length} active team listing</p>
               </div>

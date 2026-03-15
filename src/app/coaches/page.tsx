@@ -4,10 +4,14 @@ import { SectionWrapper } from "@/components/layout/section-wrapper";
 import { PageHero } from "@/components/ui/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { coaches } from "@/data/site";
+import { buildPageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: "Coaches",
-};
+  description:
+    "Meet the Semo Swarm coaching staff and learn how the club develops players through technical detail, tactical clarity, and strong team culture.",
+  path: "/coaches",
+});
 
 export default function CoachesPage() {
   return (
