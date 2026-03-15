@@ -9,7 +9,7 @@ export function Nav() {
   const pathname = usePathname();
 
   return (
-    <nav className="-mx-2 flex overflow-x-auto px-2 lg:mx-0 lg:overflow-visible lg:px-0">
+    <nav className="hidden lg:block">
       <div className="flex min-w-max items-center gap-1">
         {navigationItems.map((item) => {
           const isActive = item.href === "/" ? pathname === item.href : pathname.startsWith(item.href);
@@ -19,7 +19,7 @@ export function Nav() {
               key={item.href}
               href={item.href}
               className={[
-                "rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition",
+                "rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition duration-200",
                 isActive ? "bg-white text-slate-950" : "text-slate-300 hover:bg-white/8 hover:text-white",
               ].join(" ")}
             >

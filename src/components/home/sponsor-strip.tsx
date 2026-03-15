@@ -1,3 +1,4 @@
+import { SponsorCard } from "@/components/ui/sponsor-card";
 import { sponsors } from "@/data/site";
 
 export function SponsorStrip() {
@@ -13,15 +14,7 @@ export function SponsorStrip() {
 
         <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[38rem]">
           {sponsors.map((sponsor) => (
-            <div
-              key={sponsor.name}
-              className="flex min-h-20 items-center justify-center rounded-2xl border border-white/10 bg-slate-950/55 px-4 py-5 text-center"
-            >
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-white">{sponsor.name}</p>
-                <p className="mt-2 text-[11px] uppercase tracking-[0.18em] text-slate-500">{sponsor.category}</p>
-              </div>
-            </div>
+            <SponsorCard key={sponsor.name} sponsor={sponsor} compact />
           ))}
         </div>
       </div>

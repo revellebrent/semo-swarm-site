@@ -1,3 +1,4 @@
+import { Card, CardTitle } from "@/components/ui/card";
 import type { SponsorTier } from "@/types/site";
 
 type SponsorTierCardProps = {
@@ -6,9 +7,9 @@ type SponsorTierCardProps = {
 
 export function SponsorTierCard({ tier }: SponsorTierCardProps) {
   return (
-    <article className="rounded-[1.9rem] border border-white/10 bg-white/5 p-6">
+    <Card className="h-full">
       <div className="flex items-center justify-between gap-4">
-        <p className="text-2xl font-semibold text-white">{tier.name}</p>
+        <CardTitle className="text-xl">{tier.name}</CardTitle>
         <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-amber-200">
           {tier.investment}
         </span>
@@ -19,6 +20,6 @@ export function SponsorTierCard({ tier }: SponsorTierCardProps) {
           <li key={highlight}>{highlight}</li>
         ))}
       </ul>
-    </article>
+    </Card>
   );
 }

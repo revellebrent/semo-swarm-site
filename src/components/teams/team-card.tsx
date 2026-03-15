@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardEyebrow, CardTitle } from "@/components/ui/card";
 import type { Team } from "@/types/site";
 
 type TeamCardProps = {
@@ -7,14 +8,14 @@ type TeamCardProps = {
 
 export function TeamCard({ team }: TeamCardProps) {
   return (
-    <article className="rounded-[1.9rem] border border-white/10 bg-white/5 p-6">
+    <Card className="h-full">
       <div className="flex items-center justify-between gap-4">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">{team.ageGroup}</p>
+        <CardEyebrow className="text-sm tracking-[0.2em]">{team.ageGroup}</CardEyebrow>
         <span className="rounded-full border border-white/10 bg-slate-950/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-300">
           {team.level}
         </span>
       </div>
-      <h2 className="mt-4 text-2xl font-semibold text-white">{team.name}</h2>
+      <CardTitle className="mt-4">{team.name}</CardTitle>
       <p className="mt-3 text-sm leading-7 text-slate-300">{team.summary}</p>
 
       <dl className="mt-6 grid gap-4 text-sm text-slate-400">
@@ -37,6 +38,6 @@ export function TeamCard({ team }: TeamCardProps) {
           Open Team Page
         </Button>
       </div>
-    </article>
+    </Card>
   );
 }
