@@ -1,13 +1,28 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type ButtonProps = {
-  href: string;
+type SharedButtonProps = {
   children: ReactNode;
   variant?: "primary" | "secondary" | "ghost";
   size?: "sm" | "md" | "lg";
   className?: string;
 };
+
+type LinkButtonProps = SharedButtonProps & {
+  href: string;
+  type?: never;
+  disabled?: never;
+  onClick?: never;
+};
+
+type NativeButtonProps = SharedButtonProps & {
+  href?: undefined;
+  type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
+  disabled?: boolean;
+  onClick?: ButtonHTMLAttributes<HTMLButtonElement>["onClick"];
+};
+
+type ButtonProps = LinkButtonProps | NativeButtonProps;
 
 const variantClasses: Record<NonNullable<ButtonProps["variant"]>, string> = {
   primary:
@@ -23,23 +38,39 @@ const sizeClasses: Record<NonNullable<ButtonProps["size"]>, string> = {
 };
 
 export function Button({
-  href,
   children,
   variant = "primary",
   size = "md",
   className = "",
+  ...props
 }: ButtonProps) {
+  const classes = [
+    "inline-flex items-center justify-center rounded-full font-semibold tracking-[0.01em] transition duration-200 disabled:cursor-not-allowed disabled:opacity-60",
+    variantClasses[variant],
+    sizeClasses[size],
+    className,
+  ].join(" ");
+
+  if ("href" in props && props.href) {
+    const { href } = props;
+
+    return (
+      <Link href={href} className={classes}>
+        {children}
+      </Link>
+    );
+  }
+
+  const { type, disabled, onClick } = props as NativeButtonProps;
+
   return (
-    <Link
-      href={href}
-      className={[
-        "inline-flex items-center justify-center rounded-full font-semibold tracking-[0.01em] transition duration-200",
-        variantClasses[variant],
-        sizeClasses[size],
-        className,
-      ].join(" ")}
+    <button
+      type={type ?? "button"}
+      disabled={disabled}
+      onClick={onClick}
+      className={classes}
     >
       {children}
-    </Link>
+    </button>
   );
 }

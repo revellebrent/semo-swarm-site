@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 
+import { SectionWrapper } from "@/components/layout/section-wrapper";
 import { FaqList } from "@/components/tryouts/faq-list";
 import { RegistrationCtaCard } from "@/components/tryouts/registration-cta-card";
 import { TryoutProgramCard } from "@/components/tryouts/tryout-program-card";
-import { SectionWrapper } from "@/components/layout/section-wrapper";
+import { TryoutRegistrationForm } from "@/components/tryouts/tryout-registration-form";
 import { Button } from "@/components/ui/button";
 import { PageHero } from "@/components/ui/page-hero";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -28,10 +29,10 @@ export default function TryoutsPage() {
           eyebrow: "Tryouts",
           title: "Professional tryouts for players ready to enter the Swarm pathway.",
           description:
-            "Built for clarity and confidence, the Semo Swarm tryout page is structured to support club-wide evaluations today and a full registration workflow later.",
+            "Built for clarity and confidence, the Semo Swarm tryout page is structured to support club-wide evaluations now and a full registration workflow later.",
           actions: [
-            { href: "/contact", label: "Request Tryout Info", variant: "primary" },
-            { href: "#registration", label: "View Registration Paths", variant: "secondary" },
+            { href: "#registration-form", label: "Start Registration", variant: "primary" },
+            { href: "/contact", label: "Request Tryout Info", variant: "secondary" },
           ],
         }}
       />
@@ -93,25 +94,6 @@ export default function TryoutsPage() {
 
       <SectionWrapper>
         <SectionHeading
-          eyebrow="Club-Wide Tryouts"
-          title="One pathway for players entering the broader Semo Swarm environment."
-          description="These are the main tryout windows for most families and are organized to create the right balance of age grouping, coach evaluation, and placement clarity."
-        />
-
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {clubWideTryoutPrograms.map((program) => (
-            <article key={`${program.id}-overview`} className="rounded-[1.8rem] border border-white/10 bg-white/5 p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">{program.ageGroup}</p>
-              <h3 className="mt-3 text-2xl font-semibold text-white">{program.title}</h3>
-              <p className="mt-3 text-sm leading-7 text-slate-300">{program.description}</p>
-              <p className="mt-5 text-sm text-slate-400">Window: {program.dates}</p>
-            </article>
-          ))}
-        </div>
-      </SectionWrapper>
-
-      <SectionWrapper className="bg-white/[0.03]">
-        <SectionHeading
           eyebrow="Independent Coach Tryouts"
           title="Coach-specific evaluation opportunities for targeted player profiles."
           description="Some players are best served by direct coach-led sessions before entering a broader roster conversation. This section is designed to scale into coach-managed registration later."
@@ -123,11 +105,11 @@ export default function TryoutsPage() {
               <p className="text-sm font-semibold uppercase tracking-[0.2em] text-amber-300">{tryout.ageFocus}</p>
               <h3 className="mt-3 text-2xl font-semibold text-white">{tryout.program}</h3>
               <p className="mt-2 text-sm font-medium text-slate-400">
-                {tryout.coachName} • {tryout.role}
+                {tryout.coachName} | {tryout.role}
               </p>
               <p className="mt-4 text-sm leading-7 text-slate-300">{tryout.summary}</p>
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <Button href={tryout.registrationHref} variant="secondary">
+                <Button href="#registration-form" variant="secondary">
                   Request Coach Session
                 </Button>
                 <span className="text-sm text-slate-400">{tryout.contact}</span>
@@ -137,21 +119,39 @@ export default function TryoutsPage() {
         </div>
       </SectionWrapper>
 
-      <SectionWrapper id="registration">
-        <SectionHeading
-          eyebrow="Registration CTAs"
-          title="Clear paths for registration, coach inquiry, and family questions."
-          description="These CTA cards can point to a future hosted form, embedded registration flow, or internal club admin system without changing the visual structure."
-        />
+      <SectionWrapper id="registration-form" className="bg-white/[0.03]">
+        <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr]">
+          <div className="space-y-8">
+            <SectionHeading
+              eyebrow="Registration"
+              title="Front-end registration UI designed for a future API or Supabase connection."
+              description="The form uses typed controlled inputs, client-side validation, and clean structure so it can be hooked into a real submission flow without changing the page layout."
+            />
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {tryoutRegistrationCards.map((card) => (
-            <RegistrationCtaCard key={card.id} card={card} />
-          ))}
+            <div className="grid gap-5">
+              {tryoutRegistrationCards.map((card) => (
+                <RegistrationCtaCard key={card.id} card={card} />
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(255,255,255,0.08),_rgba(255,255,255,0.03))] p-7 sm:p-8">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-300">Tryout Registration Form</p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-white sm:text-4xl">
+              Submit a player interest form.
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-slate-300">
+              This is a front-end placeholder flow with validation, loading state, and success messaging already built in.
+            </p>
+
+            <div className="mt-8">
+              <TryoutRegistrationForm />
+            </div>
+          </div>
         </div>
       </SectionWrapper>
 
-      <SectionWrapper className="bg-white/[0.03]">
+      <SectionWrapper>
         <div className="grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
           <SectionHeading
             eyebrow="FAQ"
