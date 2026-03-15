@@ -1,8 +1,9 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 
+import { submitSponsorInquiry, type SponsorInquiryActionState } from "@/app/sponsors/actions";
 import { FormField } from "@/components/forms/form-field";
 import { Button } from "@/components/ui/button";
 import { sponsorTiers } from "@/data/sponsors";
@@ -27,11 +28,24 @@ const initialState: SponsorInquiryFormState = {
   message: "",
 };
 
+const initialActionState: SponsorInquiryActionState = {
+  status: "idle",
+  message: null,
+};
+
+function SubmitButton({ isPending }: { isPending: boolean }) {
+  return (
+    <Button type="submit" size="lg" disabled={isPending}>
+      {isPending ? "Submitting..." : "Submit Inquiry"}
+    </Button>
+  );
+}
+
 export function SponsorInquiryForm() {
   const [formState, setFormState] = useState<SponsorInquiryFormState>(initialState);
   const [errors, setErrors] = useState<SponsorInquiryFormErrors>({});
-  const [submitState, setSubmitState] = useState<"idle" | "success" | "error">("idle");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [actionState, setActionState] = useState<SponsorInquiryActionState>(initialActionState);
+  const [isPending, startTransition] = useTransition();
 
   const tierOptions = useMemo(
     () => [
@@ -44,7 +58,9 @@ export function SponsorInquiryForm() {
   function updateField<Key extends keyof SponsorInquiryFormState>(key: Key, value: string) {
     setFormState((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: undefined }));
-    setSubmitState("idle");
+    if (actionState.status !== "idle") {
+      setActionState(initialActionState);
+    }
   }
 
   function validate(values: SponsorInquiryFormState) {
@@ -75,29 +91,30 @@ export function SponsorInquiryForm() {
     return nextErrors;
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const nextErrors = validate(formState);
     if (Object.keys(nextErrors).length > 0) {
       setErrors(nextErrors);
-      setSubmitState("error");
+      setActionState({
+        status: "error",
+        message: "Please complete the required fields before submitting.",
+      });
       return;
     }
 
-    setIsSubmitting(true);
-    setSubmitState("idle");
+    const submissionData = new FormData(event.currentTarget);
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 700));
-      setSubmitState("success");
-      setErrors({});
-      setFormState(initialState);
-    } catch {
-      setSubmitState("error");
-    } finally {
-      setIsSubmitting(false);
-    }
+    startTransition(async () => {
+      const result = await submitSponsorInquiry(initialActionState, submissionData);
+      setActionState(result);
+
+      if (result.status === "success") {
+        setErrors({});
+        setFormState(initialState);
+      }
+    });
   }
 
   return (
@@ -105,6 +122,7 @@ export function SponsorInquiryForm() {
       <div className="grid gap-5 md:grid-cols-2">
         <FormField
           id="businessName"
+          name="businessName"
           label="Business Name"
           value={formState.businessName}
           onChange={(event) => updateField("businessName", event.target.value)}
@@ -114,6 +132,7 @@ export function SponsorInquiryForm() {
         />
         <FormField
           id="contactName"
+          name="contactName"
           label="Primary Contact"
           value={formState.contactName}
           onChange={(event) => updateField("contactName", event.target.value)}
@@ -126,6 +145,7 @@ export function SponsorInquiryForm() {
       <div className="grid gap-5 md:grid-cols-2">
         <FormField
           id="email"
+          name="email"
           label="Email Address"
           value={formState.email}
           onChange={(event) => updateField("email", event.target.value)}
@@ -136,6 +156,7 @@ export function SponsorInquiryForm() {
         />
         <FormField
           id="phone"
+          name="phone"
           label="Phone Number"
           value={formState.phone}
           onChange={(event) => updateField("phone", event.target.value)}
@@ -146,6 +167,7 @@ export function SponsorInquiryForm() {
 
       <FormField
         id="interest"
+        name="interest"
         label="Sponsorship Interest"
         value={formState.interest}
         onChange={(event) => updateField("interest", event.target.value)}
@@ -154,11 +176,12 @@ export function SponsorInquiryForm() {
         options={tierOptions}
         required
         error={errors.interest}
-        helperText="This can later map directly to a sponsor inquiry record or CRM workflow."
+        helperText="This inquiry is stored in Supabase so admins can review it later."
       />
 
       <FormField
         id="message"
+        name="message"
         label="Message"
         value={formState.message}
         onChange={(event) => updateField("message", event.target.value)}
@@ -168,23 +191,27 @@ export function SponsorInquiryForm() {
         error={errors.message}
       />
 
-      {submitState === "success" ? (
+      {actionState.status === "success" ? (
         <div className="rounded-[1.4rem] border border-emerald-400/25 bg-emerald-400/10 px-4 py-3 text-sm text-emerald-200">
-          Sponsor inquiry placeholder submitted successfully. This form is ready for a future Supabase or API route connection.
+          {actionState.message}
         </div>
       ) : null}
 
-      {submitState === "error" && Object.keys(errors).length > 0 ? (
+      {Object.keys(errors).length > 0 ? (
         <div className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
           Please complete the required fields before submitting.
         </div>
       ) : null}
 
+      {actionState.status === "error" && actionState.message ? (
+        <div className="rounded-[1.4rem] border border-rose-400/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-200">
+          {actionState.message}
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap items-center gap-3 pt-1">
-        <Button type="submit" size="lg" disabled={isSubmitting}>
-          {isSubmitting ? "Submitting..." : "Submit Inquiry"}
-        </Button>
-        <p className="text-sm text-slate-400">Front-end only for now. No inquiry is being stored yet.</p>
+        <SubmitButton isPending={isPending} />
+        <p className="text-sm text-slate-400">Sponsor leads now submit directly into the club&apos;s Supabase inquiry table.</p>
       </div>
     </form>
   );

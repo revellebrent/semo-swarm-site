@@ -146,7 +146,7 @@ export default async function SponsorsPage() {
               Tell us about your business and partnership goals.
             </h2>
             <p className="mt-4 text-sm leading-7 text-slate-300">
-              This is a polished front-end placeholder flow that can later submit to an API route, server action, or Supabase-backed table.
+              This inquiry flow now validates required fields and submits sponsor leads directly into Supabase for future admin review.
             </p>
 
             <div className="mt-8">

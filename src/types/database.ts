@@ -141,6 +141,34 @@ export type Database = {
           updated_at: string;
         };
       };
+      sponsor_inquiries: {
+        Row: {
+          id: string;
+          business_name: string;
+          contact_name: string;
+          email: string;
+          phone: string | null;
+          interest: string | null;
+          message: string;
+          status: "new" | "in_review" | "contacted" | "closed";
+          assigned_profile_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          business_name: string;
+          contact_name: string;
+          email: string;
+          phone?: string | null;
+          interest?: string | null;
+          message: string;
+          status?: "new" | "in_review" | "contacted" | "closed";
+          assigned_profile_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
       teams: {
         Row: {
           id: string;
